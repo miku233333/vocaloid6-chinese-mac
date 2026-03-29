@@ -1,0 +1,212 @@
+# VOCALOID 專業術語庫
+# 用於確保翻譯一致性和專業性
+
+version: "1.0"
+last_updated: "2026-03-29"
+
+vocaloid_terms:
+  # 基本編輯
+  - en: "Note"
+    zh_cn: "音符"
+    zh_tw: "音符"
+    ja: "音符"
+    context: ["editor", "piano_roll"]
+    
+  - en: "Pitch"
+    zh_cn: "音高"
+    zh_tw: "音高"
+    ja: "音程"
+    context: ["note", "parameter"]
+    
+  - en: "Velocity"
+    zh_cn: "力度"
+    zh_tw: "力度"
+    ja: "ベロシティ"
+    context: ["note", "dynamics"]
+    
+  - en: "Length"
+    zh_cn: "长度"
+    zh_tw: "長度"
+    ja: "長さ"
+    context: ["note", "duration"]
+
+  # 參數控制
+  - en: "Pitch Bend"
+    zh_cn: "音高弯音"
+    zh_tw: "音高滑音"
+    ja: "ピッチベンド"
+    context: ["parameter", "editor"]
+    
+  - en: "Vibrato"
+    zh_cn: "颤音"
+    zh_tw: "抖音"
+    ja: "ビブラート"
+    context: ["parameter", "expression"]
+    
+  - en: "Dynamics"
+    zh_cn: "动态"
+    zh_tw: "動態"
+    ja: "ダイナミクス"
+    context: ["parameter", "volume"]
+    
+  - en: "Brightness"
+    zh_cn: "亮度"
+    zh_tw: "亮度"
+    ja: "ブライトネス"
+    context: ["parameter", "timbre"]
+    
+  - en: "Timbre"
+    zh_cn: "音色"
+    zh_tw: "音色"
+    ja: "音色"
+    context: ["parameter", "voice"]
+    
+  - en: "Gender"
+    zh_cn: "性别"
+    zh_tw: "性別"
+    ja: "ジェンダー"
+    context: ["parameter", "voice"]
+    
+  - en: "Breathiness"
+    zh_cn: "气声"
+    zh_tw: "氣聲"
+    ja: "ブレス"
+    context: ["parameter", "expression"]
+    
+  - en: "Voice Color"
+    zh_cn: "人声色彩"
+    zh_tw: "人聲色彩"
+    ja: "ボイスカラー"
+    context: ["parameter", "voice"]
+
+  # 工具
+  - en: "Pencil Tool"
+    zh_cn: "铅笔工具"
+    zh_tw: "鉛筆工具"
+    ja: "ペンシルツール"
+    context: ["tool", "draw"]
+    
+  - en: "Eraser Tool"
+    zh_cn: "橡皮擦工具"
+    zh_tw: "橡皮擦工具"
+    ja: "消しゴムツール"
+    context: ["tool", "erase"]
+    
+  - en: "Selector Tool"
+    zh_cn: "选择工具"
+    zh_tw: "選擇工具"
+    ja: "選択ツール"
+    context: ["tool", "select"]
+
+  # 界面元素
+  - en: "Piano Roll"
+    zh_cn: "钢琴卷轴"
+    zh_tw: "鋼琴捲軸"
+    ja: "ピアノロール"
+    context: ["window", "editor"]
+    
+  - en: "Mixer"
+    zh_cn: "混音器"
+    zh_tw: "混音器"
+    ja: "ミキサー"
+    context: ["window", "audio"]
+    
+  - en: "Timeline"
+    zh_cn: "时间轴"
+    zh_tw: "時間軸"
+    ja: "タイムライン"
+    context: ["window", "navigation"]
+    
+  - en: "Inspector"
+    zh_cn: "检查器"
+    zh_tw: "檢查器"
+    ja: "インスペクター"
+    context: ["window", "properties"]
+
+  # 文件操作
+  - en: "Track"
+    zh_cn: "音轨"
+    zh_tw: "軌道"
+    ja: "トラック"
+    context: ["file", "arrangement"]
+    
+  - en: "Part"
+    zh_cn: "乐段"
+    zh_tw: "樂段"
+    ja: "パート"
+    context: ["file", "arrangement"]
+    
+  - en: "Voicebank"
+    zh_cn: "音声库"
+    zh_tw: "音聲庫"
+    ja: "ボイスバンク"
+    context: ["library", "voice"]
+    
+  - en: "Style"
+    zh_cn: "风格"
+    zh_tw: "風格"
+    ja: "スタイル"
+    context: ["library", "preset"]
+    
+  - en: "Phrase"
+    zh_cn: "乐句"
+    zh_tw: "樂句"
+    ja: "フレーズ"
+    context: ["library", "preset"]
+
+  # 合成引擎
+  - en: "VOCALOID Engine"
+    zh_cn: "VOCALOID 引擎"
+    zh_tw: "VOCALOID 引擎"
+    ja: "VOCALOID エンジン"
+    context: ["synth", "engine"]
+    
+  - en: "AI Synthesis"
+    zh_cn: "AI 合成"
+    zh_tw: "AI 合成"
+    ja: "AI 合成"
+    context: ["synth", "ai"]
+    
+  - en: "Real Mode"
+    zh_cn: "真实模式"
+    zh_tw: "真實模式"
+    ja: "リアルモード"
+    context: ["synth", "mode"]
+
+  # 设置
+  - en: "General Settings"
+    zh_cn: "常规设置"
+    zh_tw: "一般設定"
+    ja: "一般設定"
+    context: ["settings", "preferences"]
+    
+  - en: "Audio Settings"
+    zh_cn: "音频设置"
+    zh_tw: "音訊設定"
+    ja: "オーディオ設定"
+    context: ["settings", "audio"]
+    
+  - en: "MIDI Settings"
+    zh_cn: "MIDI 设置"
+    zh_tw: "MIDI 設定"
+    ja: "MIDI 設定"
+    context: ["settings", "midi"]
+    
+  - en: "Shortcuts"
+    zh_cn: "快捷键"
+    zh_tw: "快捷鍵"
+    ja: "ショートカット"
+    context: ["settings", "keyboard"]
+
+translation_guidelines:
+  zh_tw:
+    - 使用台灣繁體中文用語
+    - 避免中國大陸專用詞彙（如：软件→軟體，程序→程式）
+    - 保持音樂製作專業術語準確
+    - 簡潔明了，符合界面空間限制
+    
+  zh_cn:
+    - 使用简体中文标准用语
+    - 符合音乐制作行业标准
+    - 保持术语一致性
+    - 简洁清晰
