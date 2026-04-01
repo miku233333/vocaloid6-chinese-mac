@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+extracted_resources/
+output/
+vocaloid6-localization/

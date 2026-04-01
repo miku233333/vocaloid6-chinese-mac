@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-VOCALOID6 Mac 版一鍵安裝器
+VOCALOID6 Mac 繁體中文安裝器
 支持自動備份、安裝、還原、卸載
 """
 
@@ -17,7 +17,7 @@ from datetime import datetime
 
 
 class VocaloidInstaller:
-    """VOCALOID6 Mac 版漢化包安裝器"""
+    """VOCALOID6 Mac 繁體中文安裝器"""
     
     def __init__(self, language: str = "zh-TW"):
         self.language = language
@@ -34,6 +34,8 @@ class VocaloidInstaller:
             Path.home() / "Applications/VOCALOID6.app",
             Path("/Applications/VOCALOID 6.app"),
             Path.home() / "Applications/VOCALOID 6.app",
+            Path("/Applications/VOCALOID6 Editor.app"),
+            Path.home() / "Applications/VOCALOID6 Editor.app",
         ]
         
         found = []
@@ -187,7 +189,7 @@ class VocaloidInstaller:
         
     def install(self):
         """執行安裝流程"""
-        print("🚀 VOCALOID6 Mac 版漢化包安裝器")
+        print("🚀 VOCALOID6 Mac 繁體中文安裝器")
         print("=" * 50)
         
         # 檢測安裝
@@ -197,6 +199,10 @@ class VocaloidInstaller:
             print("\n請確保 VOCALOID6 已安裝到以下位置之一:")
             print("  - /Applications/VOCALOID6.app")
             print("  - ~/Applications/VOCALOID6.app")
+            print("  - /Applications/VOCALOID 6.app")
+            print("  - ~/Applications/VOCALOID 6.app")
+            print("  - /Applications/VOCALOID6 Editor.app")
+            print("  - ~/Applications/VOCALOID6 Editor.app")
             sys.exit(1)
             
         print(f"\n✅ 找到 VOCALOID6: {app_path}")
@@ -307,7 +313,7 @@ class VocaloidInstaller:
         
     def uninstall(self):
         """卸載語言包"""
-        print("🗑️ 卸載 VOCALOID6 語言包")
+        print("🗑️ 卸載 VOCALOID6 繁體中文語言包")
         
         app_path = self.detect_installation()
         if not app_path:
@@ -325,7 +331,7 @@ class VocaloidInstaller:
 
 
 def main():
-    parser = argparse.ArgumentParser(description='VOCALOID6 Mac 版漢化包安裝器')
+    parser = argparse.ArgumentParser(description='VOCALOID6 Mac 繁體中文安裝器')
     parser.add_argument('-l', '--lang', default='zh-TW', 
                        help='目標語言 (default: zh-TW)')
     parser.add_argument('--install', action='store_true', 
