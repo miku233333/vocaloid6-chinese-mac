@@ -18,7 +18,26 @@
 - 替換工具：[scripts/resource_replacer.py](../scripts/resource_replacer.py)
 - 繁體中文詞條：[data/translations/zh-TW.json](../data/translations/zh-TW.json)
 
-### 2. 繁體中文詞條目前只有初步覆蓋
+### 2. 真實 app 資源提取已驗證可行
+
+已在本機這個真實安裝路徑上驗證：
+
+- `/Applications/VOCALOID6 Editor.app`
+
+提取結果：
+
+- `30` 個 `.strings` 文件
+- `1078` 條字符串
+- `8494` 條 `.nib` 候選 UI 文本
+
+目前已能穩定生成：
+
+- `extracted_strings.json`
+- `translation_template.csv`
+- `nib_ui_candidates.json`
+- `extraction_report.md`
+
+### 3. 繁體中文詞條目前只有初步覆蓋
 
 目前 `zh-TW.json` 共有 **87** 條翻譯。
 
@@ -27,7 +46,7 @@
 - 已有基礎 UI 詞條
 - 但距離完整 GUI 漢化仍有很大距離
 
-### 3. Shell 入口已可作為 Python 安裝器封裝
+### 4. Shell 入口已可作為 Python 安裝器封裝
 
 - [install.sh](../install.sh)
 - [uninstall.sh](../uninstall.sh)
@@ -47,6 +66,7 @@
 - 「可以安全使用」
 - 「安裝後 GUI 覆蓋率達 85% / 91%」
 - 「已在真實 VOCALOID6 v6.4.2 上完成完整驗證」
+- 「已完成正式繁體中文漢化包」
 
 原因很簡單：
 
@@ -60,9 +80,9 @@
 
 如果要把這個項目往前推，建議按這個順序驗證：
 
-1. 在真實 VOCALOID6 Mac 安裝上執行資源提取
-2. 檢查 `Contents/Resources` 裡實際有哪些 `.strings` / `.plist` / 其他可本地化文件
-3. 用 `zh-TW` 詞條生成 `Localizable.strings`
+1. 用 `translation_template.csv` 補齊 `zh-TW`
+2. 檢查 `nib_ui_candidates.json`，去噪並建立 UI 映射
+3. 用 `zh-TW` 詞條生成可安裝的本地化包
 4. 實際安裝到測試環境
 5. 對照安裝前後 UI 截圖，做一份真正的測試報告
 

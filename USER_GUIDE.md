@@ -43,29 +43,40 @@ chmod +x install.sh
 # 3. 重啟 VOCALOID6 Editor
 ```
 
-### 方法 B: 手動安裝
+### 方法 B: 手動安裝 / 提取翻譯模板
 
-#### 步驟 1: 提取原版資源（如果需要漢化）
+#### 步驟 1: 提取原版資源
 
 ```bash
-# Mac
-cd scripts/
-python3 extract_resources.py
-
+python3 scripts/extract_resources.py
 ```
 
 **注意**: 這會從 VOCALOID6 安裝目錄提取資源文件到 `extracted_resources/`
 
-#### 步驟 2: 編輯翻譯文件
+#### 步驟 2: 提取真實字串模板
+
+```bash
+python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./output
+```
+
+這一步目前已在本機驗證可用，會產生：
+
+- `output/extracted_strings.json`
+- `output/translation_template.csv`
+- `output/nib_ui_candidates.json`
+- `output/extraction_report.md`
+
+#### 步驟 3: 編輯翻譯文件
 
 目前主要編輯：
 
 - `data/translations/zh-TW.json`
+- `output/translation_template.csv`
 
-#### 步驟 3: 生成本地化包
+#### 步驟 4: 生成本地化包
 
 ```bash
-python3 scripts/resource_replacer.py /Applications/VOCALOID6.app --mode bundle --lang zh-TW --output ./output
+python3 scripts/resource_replacer.py "/Applications/VOCALOID6 Editor.app" --mode bundle --lang zh-TW --output ./output
 ```
 
 這一步目前比較接近「生成骨架」，還不代表最終漢化效果已完成。
@@ -87,7 +98,7 @@ python3 scripts/resource_replacer.py /Applications/VOCALOID6.app --mode bundle -
 |------|------|------|
 | 安裝器 | 🟡 部分完成 | 可建立語言包骨架與備份 |
 | 翻譯文件 | 🟡 部分完成 | `zh-TW` 目前只有初步詞條 |
-| 資源提取工具 | ✅ 可用 | 可作為後續漢化前置步驟 |
+| 資源提取工具 | ✅ 可用 | 已在真實 app 上驗證可提取 1078 條字符串 |
 | 實際漢化資源 | ❌ 未完成 | 尚無正式產物 |
 | 實機測試 | ❌ 未完成 | 不能宣稱已完成 |
 

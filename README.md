@@ -18,13 +18,20 @@
 - 資源提取與字串提取工具
 - 一套可繼續擴展的漢化工程骨架
 
-目前**還沒有**驗證完成的正式 `resources/` 漢化產物，也**沒有**可信的端到端實機測試結論。
+目前**還沒有**驗證完成的正式 `resources/` 漢化產物，也**沒有**完整的端到端安裝驗證結論。
+
+但和之前不同的是：
+
+- 已在本機真實安裝的 `VOCALOID6 Editor.app` 上跑通資源提取
+- 已成功提取 `30` 個 `.strings` 文件
+- 已成功整理出 `1078` 條可翻譯字符串
+- 已成功整理出 `8494` 條 `.nib` UI 候選文本
 
 ---
 
 ## 當前真實完成度
 
-以「可持續開發的 Mac 繁體中文漢化工程」來看，現在大約是 **40% - 45%**。
+以「可持續開發的 Mac 繁體中文漢化工程」來看，現在大約是 **50% - 55%**。
 
 已完成：
 
@@ -33,11 +40,12 @@
 - 資源提取工具
 - 字串提取工具
 - 備份 / 還原流程設計
+- 真實 app 資源提取驗證
 
 未完成：
 
 - 真正可發布的漢化資源包
-- 可信的實機安裝驗證
+- 可信的安裝前後對照驗證
 - 不同 VOCALOID6 Mac 版本兼容性驗證
 - 完整 UI 覆蓋
 
@@ -88,7 +96,20 @@ bash -n install.sh uninstall.sh
 python3 scripts/extract_resources.py
 ```
 
-### 3. 安裝繁體中文語言包骨架
+### 3. 建立真實翻譯模板
+
+```bash
+python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./output
+```
+
+這一步目前已在本機驗證可用，會生成：
+
+- `output/extracted_strings.json`
+- `output/translation_template.csv`
+- `output/nib_ui_candidates.json`
+- `output/extraction_report.md`
+
+### 4. 安裝繁體中文語言包骨架
 
 ```bash
 ./install.sh
@@ -103,7 +124,7 @@ python3 scripts/extract_resources.py
 
 它**不代表所有 UI 都已完成漢化**。
 
-### 4. 卸載 / 還原
+### 5. 卸載 / 還原
 
 ```bash
 ./uninstall.sh
@@ -133,6 +154,15 @@ python3 scripts/extract_resources.py
 
 ---
 
+## 最新已驗證進展
+
+- 已在本機 `/Applications/VOCALOID6 Editor.app` 上完成真實提取
+- 已確認 app bundle 內存在可本地化的 `.strings` / `.nib` 資源
+- 字串提取工具已不再卡在編碼解碼錯誤
+- 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
+
+---
+
 ## 已知限制
 
 - 目前只有少量翻譯詞條，覆蓋仍不足
@@ -144,9 +174,9 @@ python3 scripts/extract_resources.py
 
 ## 下一步建議
 
-1. 在本機實際提取 VOCALOID6 資源
-2. 建立真實 `translation_template` 與資源映射
-3. 用 `zh-TW` 優先補齊高頻 UI
+1. 用 `translation_template.csv` 補齊高頻 `zh-TW` 翻譯
+2. 篩選 `nib_ui_candidates.json`，建立更準確的 UI 對照
+3. 生成一版可安裝的 `zh-TW.lproj` 測試包
 4. 做一次真正的安裝前後對比驗證
 
 ---
