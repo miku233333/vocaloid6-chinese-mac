@@ -5,13 +5,10 @@ VOCALOID6 Mac 版資源替換工具
 零侵入式動態本地化引擎
 """
 
-import os
-import sys
 import json
-import plistlib
 import shutil
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import argparse
 from datetime import datetime
 
@@ -26,6 +23,7 @@ class ResourceReplacer:
         self.backup_path = Path.home() / ".vocaloid6-backup" / datetime.now().strftime("%Y%m%d_%H%M%S")
         self.translation_file = Path(__file__).parent.parent / "data" / "translations" / f"{language}.json"
         self.terminology_file = Path(__file__).parent.parent / "data" / "terminology" / "vocaloid_terms.yml"
+        self.extracted_strings_file = Path(__file__).parent.parent / "output" / "extracted_strings.json"
         self.translations: Dict[str, str] = {}
         self.terminology: Dict = {}
         
@@ -73,41 +71,45 @@ class ResourceReplacer:
         with open(self.backup_path / "backup_metadata.json", 'w', encoding='utf-8') as f:
             json.dump(metadata, f, ensure_ascii=False, indent=2)
             
+    def read_strings_payload(self, file_path: Path) -> Tuple[str, Dict[str, str]]:
+        raw = file_path.read_bytes()
+        for encoding in ("utf-16", "utf-16-le", "utf-16-be", "utf-8", "utf-8-sig"):
+            try:
+                content = raw.decode(encoding)
+                mapping = self.parse_strings_content(content)
+                if mapping:
+                    return encoding, mapping
+            except Exception:
+                continue
+        content = raw.decode("utf-16-le", errors="ignore")
+        return "utf-16", self.parse_strings_content(content)
+
+    def parse_strings_content(self, content: str) -> Dict[str, str]:
+        import re
+
+        mapping: Dict[str, str] = {}
+        pattern = r'"([^"]+)"\s*=\s*"((?:[^"\\]|\\.)*)";'
+        matches = re.findall(pattern, content)
+        for key, value in matches:
+            mapping[key] = value.encode("utf-8").decode("unicode_escape") if "\\u" in value else value
+        return mapping
+
     def replace_in_strings_file(self, file_path: Path):
         """替換 .strings 文件中的字符串"""
         try:
-            with open(file_path, 'r', encoding='utf-16') as f:
-                content = f.read()
-            
-            original_content = content
+            encoding, parsed = self.read_strings_payload(file_path)
             replaced_count = 0
-            
-            # 替換 "key" = "value"; 格式
-            for key, translation in self.translations.items():
-                pattern = f'"{key}" = "'
-                if pattern in content:
-                    # 找到舊值並替換
-                    old_pattern = f'"{key}" = "'
-                    # 簡單替換策略：只替換值部分
-                    lines = content.split('\n')
-                    new_lines = []
-                    for line in lines:
-                        if line.strip().startswith(f'"{key}" = "'):
-                            # 提取舊值
-                            parts = line.split('"')
-                            if len(parts) >= 4:
-                                new_line = f'"{key}" = "{translation}";'
-                                new_lines.append(new_line)
-                                replaced_count += 1
-                            else:
-                                new_lines.append(line)
-                        else:
-                            new_lines.append(line)
-                    content = '\n'.join(new_lines)
-            
+
+            for key in list(parsed.keys()):
+                translation = self.translations.get(key)
+                if translation and translation != parsed[key]:
+                    parsed[key] = translation
+                    replaced_count += 1
+
             if replaced_count > 0:
-                with open(file_path, 'w', encoding='utf-16') as f:
-                    f.write(content)
+                with open(file_path, 'w', encoding=encoding if encoding.startswith("utf") else "utf-16") as f:
+                    for key, value in parsed.items():
+                        f.write(f'"{key}" = "{value}";\n')
                 print(f"✅ 替換 {file_path.name}: {replaced_count} 個字符串")
                 
         except Exception as e:
@@ -125,6 +127,30 @@ class ResourceReplacer:
         for file_path in strings_files:
             self.replace_in_strings_file(file_path)
             
+    def load_extracted_strings(self) -> Dict[str, Dict[str, str]]:
+        if not self.extracted_strings_file.exists():
+            return {}
+
+        with open(self.extracted_strings_file, 'r', encoding='utf-8') as f:
+            payload = json.load(f)
+        return payload.get("extracted_strings", {})
+
+    def build_translated_strings_files(self) -> Dict[str, Dict[str, str]]:
+        translated_files: Dict[str, Dict[str, str]] = {}
+        extracted_files = self.load_extracted_strings()
+
+        for source_path, file_strings in extracted_files.items():
+            target_name = Path(source_path).name
+            translated_entries: Dict[str, str] = {}
+            for key, source_value in file_strings.items():
+                translated_value = self.translations.get(key)
+                if translated_value and translated_value != source_value:
+                    translated_entries[key] = translated_value
+            if translated_entries:
+                translated_files[target_name] = translated_entries
+
+        return translated_files
+
     def generate_localization_bundle(self, output_path: str):
         """生成本地化資源包（不修改原文件）"""
         output_dir = Path(output_path)
@@ -134,13 +160,22 @@ class ResourceReplacer:
         lang_dir = output_dir / f"{self.language}.lproj"
         lang_dir.mkdir(parents=True, exist_ok=True)
         
-        # 生成 Localizable.strings
-        localizable_path = lang_dir / "Localizable.strings"
-        with open(localizable_path, 'w', encoding='utf-16') as f:
-            for key, value in self.translations.items():
-                f.write(f'"{key}" = "{value}";\n')
-                
+        translated_files = self.build_translated_strings_files()
+
+        for filename, entries in translated_files.items():
+            destination = lang_dir / filename
+            with open(destination, 'w', encoding='utf-16') as f:
+                for key, value in entries.items():
+                    f.write(f'"{key}" = "{value}";\n')
+
+        if "Localizable.strings" not in translated_files:
+            localizable_path = lang_dir / "Localizable.strings"
+            with open(localizable_path, 'w', encoding='utf-16') as f:
+                for key, value in self.translations.items():
+                    f.write(f'"{key}" = "{value}";\n')
+
         print(f"✅ 生成本地化包：{output_path}")
+        print(f"✅ 生成 {len(translated_files)} 個本地化 strings 文件")
         
         # 生成安裝說明
         readme_path = output_dir / "README.md"

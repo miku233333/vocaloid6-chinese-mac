@@ -66,20 +66,39 @@ python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./out
 - `output/nib_ui_candidates.json`
 - `output/extraction_report.md`
 
-#### 步驟 3: 編輯翻譯文件
+#### 步驟 3: 接回真實 app key
+
+```bash
+python3 scripts/bootstrap_real_keys.py
+```
+
+這一步會把已知來源文本對應到真實 app key，更新：
+
+- `data/translations/zh-TW.json`
+
+#### 步驟 4: 編輯翻譯文件
 
 目前主要編輯：
 
 - `data/translations/zh-TW.json`
 - `output/translation_template.csv`
 
-#### 步驟 4: 生成本地化包
+#### 步驟 5: 生成本地化包
 
 ```bash
 python3 scripts/resource_replacer.py "/Applications/VOCALOID6 Editor.app" --mode bundle --lang zh-TW --output ./output
 ```
 
-這一步目前比較接近「生成骨架」，還不代表最終漢化效果已完成。
+這一步現在會生成：
+
+- `zh-TW.lproj/Localizable.strings`
+- 多個對應實際對話框 / 面板的 `.strings` 文件
+
+#### 步驟 6: 執行安裝
+
+```bash
+./install.sh
+```
 
 ---
 
@@ -96,10 +115,10 @@ python3 scripts/resource_replacer.py "/Applications/VOCALOID6 Editor.app" --mode
 
 | 組件 | 狀態 | 說明 |
 |------|------|------|
-| 安裝器 | 🟡 部分完成 | 可建立語言包骨架與備份 |
-| 翻譯文件 | 🟡 部分完成 | `zh-TW` 目前只有初步詞條 |
+| 安裝器 | 🟡 部分完成 | 已會安裝多文件 `.strings` bundle |
+| 翻譯文件 | 🟡 部分完成 | `zh-TW` 目前已有 321 條實際可用翻譯 |
 | 資源提取工具 | ✅ 可用 | 已在真實 app 上驗證可提取 1078 條字符串 |
-| 實際漢化資源 | ❌ 未完成 | 尚無正式產物 |
+| 實際漢化資源 | 🟡 初步可生成 | 已能生成 28 個 `.strings` 文件 |
 | 實機測試 | ❌ 未完成 | 不能宣稱已完成 |
 
 **整體狀態**: 工程骨架可用，正式漢化仍未完成

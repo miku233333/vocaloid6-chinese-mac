@@ -26,6 +26,8 @@
 - 已成功提取 `30` 個 `.strings` 文件
 - 已成功整理出 `1078` 條可翻譯字符串
 - 已成功整理出 `8494` 條 `.nib` UI 候選文本
+- 已把 `zh-TW` 種子翻譯接到真實 app key，當前已有 `321` 條翻譯
+- 已能生成 `28` 個 `zh-TW.lproj/*.strings` 文件作為安裝輸出
 
 ---
 
@@ -36,11 +38,13 @@
 已完成：
 
 - `zh-TW` 翻譯詞條文件
+- 真實 key bootstrap 腳本
 - Mac 安裝器 / 卸載器 Python 骨架
 - 資源提取工具
 - 字串提取工具
 - 備份 / 還原流程設計
 - 真實 app 資源提取驗證
+- 多文件 `.strings` bundle 生成
 
 未完成：
 
@@ -109,7 +113,22 @@ python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./out
 - `output/nib_ui_candidates.json`
 - `output/extraction_report.md`
 
-### 4. 安裝繁體中文語言包骨架
+### 4. 把真實 key 接回 `zh-TW`
+
+```bash
+python3 scripts/bootstrap_real_keys.py
+```
+
+這一步會根據：
+
+- `output/extracted_strings.json`
+- `data/glossaries/source-text-zh-TW.json`
+
+把可匹配的真實 app key 回填到：
+
+- `data/translations/zh-TW.json`
+
+### 5. 安裝繁體中文語言包
 
 ```bash
 ./install.sh
@@ -120,11 +139,12 @@ python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./out
 - 偵測 VOCALOID6 Mac 安裝路徑
 - 備份 `Contents/Resources`
 - 建立 `zh-TW.lproj`
-- 生成 `Localizable.strings`
+- 安裝由真實 key 生成的多份 `.strings` 文件
+- 如無法生成多文件，才回退為單一 `Localizable.strings`
 
-它**不代表所有 UI 都已完成漢化**。
+它**不代表所有 UI 都已完成漢化**，但已不再只是“空骨架安裝”。
 
-### 5. 卸載 / 還原
+### 6. 卸載 / 還原
 
 ```bash
 ./uninstall.sh
@@ -159,6 +179,7 @@ python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./out
 - 已在本機 `/Applications/VOCALOID6 Editor.app` 上完成真實提取
 - 已確認 app bundle 內存在可本地化的 `.strings` / `.nib` 資源
 - 字串提取工具已不再卡在編碼解碼錯誤
+- 已能為 `zh-TW.lproj` 生成 `28` 個本地化 strings 文件
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---
@@ -175,8 +196,8 @@ python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./out
 ## 下一步建議
 
 1. 用 `translation_template.csv` 補齊高頻 `zh-TW` 翻譯
-2. 篩選 `nib_ui_candidates.json`，建立更準確的 UI 對照
-3. 生成一版可安裝的 `zh-TW.lproj` 測試包
+2. 繼續擴充 `data/glossaries/source-text-zh-TW.json`
+3. 篩選 `nib_ui_candidates.json`，建立更準確的 UI 對照
 4. 做一次真正的安裝前後對比驗證
 
 ---

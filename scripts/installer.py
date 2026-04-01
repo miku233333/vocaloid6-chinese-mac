@@ -15,6 +15,8 @@ from typing import Optional
 import argparse
 from datetime import datetime
 
+from resource_replacer import ResourceReplacer
+
 
 class VocaloidInstaller:
     """VOCALOID6 Mac 繁體中文安裝器"""
@@ -122,15 +124,24 @@ class VocaloidInstaller:
         
         # 創建語言目錄
         lang_dir.mkdir(parents=True, exist_ok=True)
-        
-        # 複製翻譯文件
-        translation_file = self.data_dir / "translations" / f"{self.language}.json"
-        if translation_file.exists():
-            shutil.copy(translation_file, lang_dir / "translation.json")
-            print(f"✅ 複製翻譯文件")
-            
-        # 生成 Localizable.strings
-        self.generate_localizable_strings(lang_dir)
+
+        replacer = ResourceReplacer(str(app_path), self.language)
+        replacer.load_translations()
+        replacer.load_terminology()
+        translated_files = replacer.build_translated_strings_files()
+
+        installed_count = 0
+        for filename, entries in translated_files.items():
+            destination = lang_dir / filename
+            with open(destination, 'w', encoding='utf-16') as f:
+                for key, value in entries.items():
+                    f.write(f'"{key}" = "{value}";\n')
+            installed_count += 1
+
+        if installed_count == 0:
+            self.generate_localizable_strings(lang_dir)
+        else:
+            print(f"✅ 安裝 {installed_count} 個本地化 strings 文件")
         
         # 創建 Info.plist 覆蓋（如果需要）
         self.patch_info_plist(app_path)
@@ -138,8 +149,8 @@ class VocaloidInstaller:
         print(f"✅ 語言包安裝完成")
         
     def generate_localizable_strings(self, lang_dir: Path):
-        """生成 Localizable.strings 文件"""
-        translation_file = lang_dir / "translation.json"
+        """回退生成 Localizable.strings 文件"""
+        translation_file = self.data_dir / "translations" / f"{self.language}.json"
         if not translation_file.exists():
             return
             

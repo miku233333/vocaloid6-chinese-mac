@@ -29,6 +29,8 @@
 - `30` 個 `.strings` 文件
 - `1078` 條字符串
 - `8494` 條 `.nib` 候選 UI 文本
+- `321` 條已接上真實 key 的 `zh-TW` 翻譯
+- `28` 個可生成的 `zh-TW.lproj/*.strings` 文件
 
 目前已能穩定生成：
 
@@ -55,6 +57,7 @@
 
 - Mac 使用者的簡單入口
 - 真正邏輯仍以 `scripts/installer.py` 為主
+- 安裝器現在已會安裝真實生成的多文件 `.strings` bundle
 
 ---
 
@@ -82,7 +85,7 @@
 
 1. 用 `translation_template.csv` 補齊 `zh-TW`
 2. 檢查 `nib_ui_candidates.json`，去噪並建立 UI 映射
-3. 用 `zh-TW` 詞條生成可安裝的本地化包
+3. 重新生成並安裝 `zh-TW.lproj` 多文件 bundle
 4. 實際安裝到測試環境
 5. 對照安裝前後 UI 截圖，做一份真正的測試報告
 
