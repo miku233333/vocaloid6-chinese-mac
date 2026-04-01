@@ -28,12 +28,13 @@
 - 已成功整理出 `8494` 條 `.nib` UI 候選文本
 - 已把 `zh-TW` 種子翻譯接到真實 app key，當前已有 `321` 條翻譯
 - 已能生成 `28` 個 `zh-TW.lproj/*.strings` 文件作為安裝輸出
+- 已在副本 app 上完成一次安全安裝驗證
 
 ---
 
 ## 當前真實完成度
 
-以「可持續開發的 Mac 繁體中文漢化工程」來看，現在大約是 **50% - 55%**。
+以「可持續開發的 Mac 繁體中文漢化工程」來看，現在大約是 **65% 左右**。
 
 已完成：
 
@@ -45,6 +46,7 @@
 - 備份 / 還原流程設計
 - 真實 app 資源提取驗證
 - 多文件 `.strings` bundle 生成
+- 安全副本安裝驗證
 
 未完成：
 
@@ -150,6 +152,17 @@ python3 scripts/bootstrap_real_keys.py
 ./uninstall.sh
 ```
 
+### 7. 安全測試安裝到副本 app
+
+如果你不想直接動正式安裝，可以先複製一份 app 再測：
+
+```bash
+ditto "/Applications/VOCALOID6 Editor.app" "./tmp/VOCALOID6 Editor Test.app"
+python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --install
+```
+
+這條路徑目前已經驗證可用。
+
 ---
 
 ## 支援的安裝路徑
@@ -180,6 +193,7 @@ python3 scripts/bootstrap_real_keys.py
 - 已確認 app bundle 內存在可本地化的 `.strings` / `.nib` 資源
 - 字串提取工具已不再卡在編碼解碼錯誤
 - 已能為 `zh-TW.lproj` 生成 `28` 個本地化 strings 文件
+- 已在 `VOCALOID6 Editor Test.app` 副本上成功完成一次安裝
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---

@@ -100,6 +100,19 @@ python3 scripts/resource_replacer.py "/Applications/VOCALOID6 Editor.app" --mode
 ./install.sh
 ```
 
+#### 步驟 7: 安全測試到副本 app（推薦）
+
+```bash
+ditto "/Applications/VOCALOID6 Editor.app" "./tmp/VOCALOID6 Editor Test.app"
+python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --install
+```
+
+這樣可以先看：
+
+- `zh-TW.lproj` 是否正確生成
+- `Info.plist` 是否寫入 `zh-TW`
+- 安裝器流程是否正常
+
 ---
 
 ## 🔧 卸載
@@ -115,7 +128,7 @@ python3 scripts/resource_replacer.py "/Applications/VOCALOID6 Editor.app" --mode
 
 | 組件 | 狀態 | 說明 |
 |------|------|------|
-| 安裝器 | 🟡 部分完成 | 已會安裝多文件 `.strings` bundle |
+| 安裝器 | 🟡 部分完成 | 已會安裝多文件 `.strings` bundle，且副本安裝已驗證 |
 | 翻譯文件 | 🟡 部分完成 | `zh-TW` 目前已有 321 條實際可用翻譯 |
 | 資源提取工具 | ✅ 可用 | 已在真實 app 上驗證可提取 1078 條字符串 |
 | 實際漢化資源 | 🟡 初步可生成 | 已能生成 28 個 `.strings` 文件 |

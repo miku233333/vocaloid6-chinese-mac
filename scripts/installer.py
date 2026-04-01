@@ -21,9 +21,11 @@ from resource_replacer import ResourceReplacer
 class VocaloidInstaller:
     """VOCALOID6 Mac 繁體中文安裝器"""
     
-    def __init__(self, language: str = "zh-TW"):
+    def __init__(self, language: str = "zh-TW", app_path: Optional[str] = None, assume_yes: bool = False):
         self.language = language
         self.app_name = "VOCALOID6"
+        self.explicit_app_path = Path(app_path).expanduser() if app_path else None
+        self.assume_yes = assume_yes
         self.app_paths = self.find_vocaloid_installations()
         self.backup_base = Path.home() / ".vocaloid6-backup"
         self.script_dir = Path(__file__).parent
@@ -31,6 +33,11 @@ class VocaloidInstaller:
         
     def find_vocaloid_installations(self) -> list:
         """查找系統中所有 VOCALOID6 安裝"""
+        if self.explicit_app_path:
+            if self.explicit_app_path.exists() and (self.explicit_app_path / "Contents/MacOS").exists():
+                return [self.explicit_app_path]
+            raise FileNotFoundError(f"指定的 VOCALOID6 路徑不存在或不是有效 .app：{self.explicit_app_path}")
+
         possible_paths = [
             Path("/Applications/VOCALOID6.app"),
             Path.home() / "Applications/VOCALOID6.app",
@@ -98,7 +105,10 @@ class VocaloidInstaller:
         resources_path = app_path / "Contents/Resources"
         if resources_path.exists():
             backup_resources = backup_path / "Resources"
-            shutil.copytree(resources_path, backup_resources, dirs_exist_ok=True)
+            subprocess.run(
+                ["ditto", str(resources_path), str(backup_resources)],
+                check=True,
+            )
             
         # 保存元數據
         metadata = {
@@ -221,11 +231,12 @@ class VocaloidInstaller:
         # 確認
         print(f"\n⚠️ 即將安裝 {self.language} 語言包到:")
         print(f"   {app_path}")
-        
-        response = input("\n繼續？(y/N): ").strip().lower()
-        if response != 'y':
-            print("❌ 安裝已取消")
-            sys.exit(0)
+
+        if not self.assume_yes:
+            response = input("\n繼續？(y/N): ").strip().lower()
+            if response != 'y':
+                print("❌ 安裝已取消")
+                sys.exit(0)
             
         # 備份
         print("\n📋 步驟 1/3: 備份原文件")
@@ -284,10 +295,11 @@ class VocaloidInstaller:
         print(f"\n⚠️ 即將還原到:")
         print(f"   {selected_backup}")
         
-        response = input("\n繼續？(y/N): ").strip().lower()
-        if response != 'y':
-            print("❌ 還原已取消")
-            sys.exit(0)
+        if not self.assume_yes:
+            response = input("\n繼續？(y/N): ").strip().lower()
+            if response != 'y':
+                print("❌ 還原已取消")
+                sys.exit(0)
             
         # 找到對應的應用路徑
         metadata_file = selected_backup / "backup_metadata.json"
@@ -345,6 +357,8 @@ def main():
     parser = argparse.ArgumentParser(description='VOCALOID6 Mac 繁體中文安裝器')
     parser.add_argument('-l', '--lang', default='zh-TW', 
                        help='目標語言 (default: zh-TW)')
+    parser.add_argument('--app-path', help='指定要安裝/測試的 VOCALOID6 .app 路徑')
+    parser.add_argument('-y', '--yes', action='store_true', help='自動確認，不再提示')
     parser.add_argument('--install', action='store_true', 
                        help='執行安裝（默認）')
     parser.add_argument('--restore', action='store_true', 
@@ -356,7 +370,7 @@ def main():
     
     args = parser.parse_args()
     
-    installer = VocaloidInstaller(args.lang)
+    installer = VocaloidInstaller(args.lang, app_path=args.app_path, assume_yes=args.yes)
     
     if args.restore:
         installer.restore()

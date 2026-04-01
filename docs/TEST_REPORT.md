@@ -39,16 +39,30 @@
 - `nib_ui_candidates.json`
 - `extraction_report.md`
 
-### 3. 繁體中文詞條目前只有初步覆蓋
+### 3. 安裝器已在副本 app 上驗證可用
 
-目前 `zh-TW.json` 共有 **87** 條翻譯。
+已用這條安全路徑驗證：
+
+- 複製 `/Applications/VOCALOID6 Editor.app`
+- 對副本執行 `installer.py --app-path ... -y --install`
+
+驗證結果：
+
+- 成功建立備份
+- 成功在副本 `Info.plist` 寫入 `zh-TW`
+- 成功安裝 `28` 個 `.strings` 文件
+- `VEPreferencesVC.strings`、`VEAddTrackVC.strings`、`Localizable.strings` 均確認有繁體中文內容
+
+### 4. 繁體中文詞條目前只有初步到中度覆蓋
+
+目前 `zh-TW.json` 共有 **321** 條翻譯。
 
 這代表：
 
 - 已有基礎 UI 詞條
 - 但距離完整 GUI 漢化仍有很大距離
 
-### 4. Shell 入口已可作為 Python 安裝器封裝
+### 5. Shell 入口已可作為 Python 安裝器封裝
 
 - [install.sh](../install.sh)
 - [uninstall.sh](../uninstall.sh)
