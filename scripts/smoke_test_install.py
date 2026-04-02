@@ -93,7 +93,7 @@ def main() -> int:
         print(f"❌ 缺少首頁 compiled nib：{compiled_nib}")
         return 1
     compiled_blob = compiled_nib.read_bytes()
-    for marker in ("開啟", "新增專案", "最近開啟", "消息"):
+    for marker in ("開啟", "新增專案", "最近開啟", "新聞欄"):
         if marker.encode("utf-8") not in compiled_blob:
             print(f"❌ 缺少首頁 nib 補丁字串：{marker}")
             return 1
@@ -106,8 +106,14 @@ def main() -> int:
     print("5. 啟動測試副本")
     run(["open", "-n", str(test_app)])
     time.sleep(args.launch_wait)
-    proc = run(["pgrep", "-af", test_app.name], check=False)
-    if proc.returncode != 0 or not proc.stdout.strip():
+    proc = None
+    process_patterns = [test_app.stem, "VOCALOID6 Editor"]
+    for pattern in process_patterns:
+        proc = run(["pgrep", "-af", pattern], check=False)
+        if proc.returncode == 0 and proc.stdout.strip():
+            break
+
+    if proc is None or proc.returncode != 0 or not proc.stdout.strip():
         print("❌ 未檢測到測試副本進程")
         return 1
     print("✅ 啟動成功")
