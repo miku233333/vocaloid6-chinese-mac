@@ -116,6 +116,20 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 
 安裝器現在會自動對被修改的 `.app` 做 ad-hoc 重簽名，降低「安裝後無法啟動」的風險。
 
+#### 步驟 8: 一鍵冒煙測試（推薦）
+
+```bash
+python3 scripts/smoke_test_install.py
+```
+
+這會自動完成：
+
+- 複製測試副本
+- 安裝 `zh-TW`
+- 驗證 `.strings` 文件
+- 驗證 `codesign`
+- 嘗試啟動副本 app
+
 ---
 
 ## 🔧 卸載
@@ -135,7 +149,7 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 | 翻譯文件 | 🟢 高覆蓋 | `zh-TW` 目前已有 700 條實際可用翻譯 |
 | 資源提取工具 | ✅ 可用 | 已在真實 app 上驗證可提取 1078 條字符串 |
 | 實際漢化資源 | 🟡 初步可生成 | 已能生成 28 個 `.strings` 文件 |
-| 實機測試 | 🟡 部分完成 | 已完成副本 app 安裝與重啟驗證，逐頁 UI 驗收仍未完成 |
+| 實機測試 | 🟡 部分完成 | 已完成副本 app 安裝、重簽名、重啟驗證，逐頁 UI 驗收仍未完成 |
 
 **整體狀態**: 工程骨架可用，正式漢化仍未完成
 

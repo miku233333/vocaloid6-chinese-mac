@@ -71,6 +71,8 @@
   字串提取工具
 - [scripts/resource_replacer.py](./scripts/resource_replacer.py)
   本地化包生成 / 替換工具
+- [scripts/smoke_test_install.py](./scripts/smoke_test_install.py)
+  一鍵驗證副本安裝、重簽名、codesign 與啟動
 - [USER_GUIDE.md](./USER_GUIDE.md)
   使用說明
 - [COMPLETION_REPORT.md](./COMPLETION_REPORT.md)
@@ -167,6 +169,20 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 
 安裝器現在還會自動對修改過的 `.app` 做 ad-hoc 重簽名，避免因 bundle 被修改而無法啟動。
 
+### 8. 一鍵冒煙測試
+
+```bash
+python3 scripts/smoke_test_install.py
+```
+
+這條腳本目前會自動完成：
+
+- 複製原始 app 到測試副本
+- 安裝 `zh-TW` 語言包
+- 驗證 `zh-TW.lproj` 與 `.strings` 文件
+- 驗證 `codesign --verify --deep --strict`
+- 嘗試啟動測試副本並確認進程存在
+
 ---
 
 ## 支援的安裝路徑
@@ -200,6 +216,7 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 - 已在 `VOCALOID6 Editor Test.app` 副本上成功完成一次安裝
 - 已在安裝後直接重新打開 `VOCALOID6 Editor Test.app`
 - 已確認 `codesign --verify --deep --strict` 通過
+- 已有 `scripts/smoke_test_install.py` 可一鍵重跑整條驗證鏈
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---

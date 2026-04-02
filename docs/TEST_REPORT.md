@@ -58,6 +58,20 @@
 - 已確認副本 app 安裝後可直接重新啟動
 - `VEPreferencesVC.strings`、`VEAddTrackVC.strings`、`Localizable.strings` 均確認有繁體中文內容
 
+### 4. 一鍵冒煙測試已可重放
+
+已新增：
+
+- [scripts/smoke_test_install.py](../scripts/smoke_test_install.py)
+
+它會自動完成：
+
+- 複製測試副本
+- 安裝語言包
+- 驗證 `.strings` 產物
+- 驗證 `codesign`
+- 啟動副本 app 並確認進程存在
+
 ### 4. 繁體中文 `.strings` 詞條已達完整覆蓋
 
 目前 `zh-TW.json` 共有 **700** 條翻譯。
