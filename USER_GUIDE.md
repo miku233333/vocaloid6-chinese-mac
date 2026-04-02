@@ -130,6 +130,23 @@ python3 scripts/smoke_test_install.py
 - 驗證 `codesign`
 - 嘗試啟動副本 app
 
+#### 步驟 9: 產生 `.nib` 可見文案清單
+
+```bash
+python3 scripts/bootstrap_nib_visible_texts.py
+```
+
+這一步會輸出：
+
+- `output/nib_visible_ui_texts.json`
+- `output/nib_visible_ui_translation_template.csv`
+- `output/nib_visible_ui_report.md`
+
+目前已驗證：
+
+- 清洗後可見 UI 唯一候選：`283`
+- 已可自動匹配繁中建議翻譯：`134`
+
 ---
 
 ## 🔧 卸載

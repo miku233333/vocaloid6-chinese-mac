@@ -26,6 +26,8 @@
 - 已成功提取 `30` 個 `.strings` 文件
 - 已成功整理出 `1078` 條可翻譯字符串
 - 已成功整理出 `8494` 條 `.nib` UI 候選文本
+- 已把 `.nib` 原始候選清洗成 `283` 條較像真實 UI 的可見文案
+- 其中 `134` 條已可自動匹配到繁體中文建議翻譯
 - 已把 `zh-TW` 詞條完整接到真實 app key，當前共有 `700` 條翻譯
 - 已完成 `613` 個真實提取 `.strings` key 的覆蓋，`unmatched_count = 0`
 - 已能生成 `28` 個 `zh-TW.lproj/*.strings` 文件作為安裝輸出
@@ -73,6 +75,8 @@
   本地化包生成 / 替換工具
 - [scripts/smoke_test_install.py](./scripts/smoke_test_install.py)
   一鍵驗證副本安裝、重簽名、codesign 與啟動
+- [scripts/bootstrap_nib_visible_texts.py](./scripts/bootstrap_nib_visible_texts.py)
+  清洗 `.nib` 可見文案並自動匹配繁體中文建議翻譯
 - [USER_GUIDE.md](./USER_GUIDE.md)
   使用說明
 - [COMPLETION_REPORT.md](./COMPLETION_REPORT.md)
@@ -183,6 +187,24 @@ python3 scripts/smoke_test_install.py
 - 驗證 `codesign --verify --deep --strict`
 - 嘗試啟動測試副本並確認進程存在
 
+### 9. 清洗 `.nib` 可見 UI 文案
+
+```bash
+python3 scripts/bootstrap_nib_visible_texts.py
+```
+
+這一步目前會生成：
+
+- `output/nib_visible_ui_texts.json`
+- `output/nib_visible_ui_translation_template.csv`
+- `output/nib_visible_ui_report.md`
+
+目前已驗證結果：
+
+- 原始 `.nib` 候選：`8494`
+- 清洗後較像可見 UI 的唯一候選：`283`
+- 已可自動匹配繁中建議翻譯：`134`
+
 ---
 
 ## 支援的安裝路徑
@@ -217,6 +239,7 @@ python3 scripts/smoke_test_install.py
 - 已在安裝後直接重新打開 `VOCALOID6 Editor Test.app`
 - 已確認 `codesign --verify --deep --strict` 通過
 - 已有 `scripts/smoke_test_install.py` 可一鍵重跑整條驗證鏈
+- 已有 `scripts/bootstrap_nib_visible_texts.py` 可把 `.nib` 層收斂成可維護清單
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---
@@ -232,9 +255,9 @@ python3 scripts/smoke_test_install.py
 
 ## 下一步建議
 
-1. 篩選 `nib_ui_candidates.json`，建立更準確的 UI 對照
+1. 以 `output/nib_visible_ui_report.md` 為基礎，補齊剩餘高價值 UI 文案
 2. 對副本 app 做逐頁截圖核對
-3. 補齊 `.nib` 層仍未映射的文字
+3. 把 `.nib` 層真正能落地的文字再往前推
 4. 再決定是否發布正式版
 
 ---

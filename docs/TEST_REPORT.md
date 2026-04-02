@@ -29,6 +29,8 @@
 - `30` 個 `.strings` 文件
 - `1078` 條字符串
 - `8494` 條 `.nib` 候選 UI 文本
+- `283` 條清洗後較像可見 UI 的唯一候選
+- `134` 條 `.nib` 可見文案已可自動匹配繁中建議翻譯
 - `700` 條 `zh-TW` 翻譯
 - `613` 個真實提取 `.strings` key 已全部匹配
 - `unmatched_count = 0`
@@ -39,6 +41,9 @@
 - `extracted_strings.json`
 - `translation_template.csv`
 - `nib_ui_candidates.json`
+- `nib_visible_ui_texts.json`
+- `nib_visible_ui_translation_template.csv`
+- `nib_visible_ui_report.md`
 - `extraction_report.md`
 
 ### 3. 安裝器已在副本 app 上驗證可用
@@ -79,7 +84,8 @@
 這代表：
 
 - 真實提取到的 `.strings` key 已全部有對應詞條
-- 目前剩下的主要不是 `.strings` 缺詞，而是 `.nib` 候選文本整理與逐頁視覺驗收
+- `.nib` 層也已從原始噪音候選進一步收斂成可維護清單
+- 目前剩下的主要不是 `.strings` 缺詞，而是 `.nib` 可見文案的持續補齊與逐頁視覺驗收
 
 ### 5. Shell 入口已可作為 Python 安裝器封裝
 
@@ -116,7 +122,7 @@
 
 如果要把這個項目往前推，建議按這個順序驗證：
 
-1. 檢查 `nib_ui_candidates.json`，去噪並建立 UI 映射
+1. 檢查 `nib_visible_ui_report.md`，優先處理高價值未匹配文案
 2. 重新生成並安裝 `zh-TW.lproj` 多文件 bundle
 3. 實際安裝到測試環境
 4. 對照安裝前後 UI 截圖，做一份真正的視覺測試報告
