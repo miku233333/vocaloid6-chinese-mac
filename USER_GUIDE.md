@@ -28,7 +28,7 @@
 
 ## 🚀 安裝步驟
 
-### 方法 A: 自動安裝（推薦）
+### 方法 A: 一鍵安裝（推薦）
 
 #### Mac
 ```bash
@@ -36,14 +36,21 @@
 git clone https://github.com/miku233333/vocaloid6-chinese-mac.git
 cd vocaloid6-chinese-mac
 
-# 2. 運行安裝器
-chmod +x install.sh
-./install.sh
+# 2. 雙擊 One-Click Install.command
+#    或命令列執行：
+python3 scripts/one_click_install.py
 
 # 3. 重啟 VOCALOID6 Editor
 ```
 
-### 方法 B: 手動安裝 / 提取翻譯模板
+一鍵安裝器會：
+
+- 優先嘗試直接安裝到現有 `VOCALOID6 Editor.app`
+- 如果 `/Applications` 下的原始 app 不可寫，就自動安裝到：
+  `~/Applications/VOCALOID6 Editor zh-TW.app`
+- 自動完成備份、安裝、重簽名與啟動
+
+### 方法 B: 傳統安裝 / 提取翻譯模板
 
 #### 步驟 1: 提取原版資源
 

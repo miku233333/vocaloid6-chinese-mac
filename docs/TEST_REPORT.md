@@ -77,6 +77,20 @@
 - 驗證 `codesign`
 - 啟動副本 app 並確認進程存在
 
+### 5. 一鍵安裝入口已具備普通使用者可用性
+
+已新增：
+
+- [scripts/one_click_install.py](../scripts/one_click_install.py)
+- [One-Click Install.command](../One-Click%20Install.command)
+
+其策略是：
+
+- 原 app 可寫時，直接安裝到現有 app
+- 原 app 不可寫時，自動複製並安裝到 `~/Applications/VOCALOID6 Editor zh-TW.app`
+
+這讓 GitHub 使用者不必先理解 `/Applications` 權限與手動備份流程。
+
 ### 5. 真實截圖已確認主啟動畫面核心靜態文案可轉為繁體中文
 
 已完成：
@@ -86,7 +100,7 @@
 
 目前可確認：
 
-- 主啟動畫面上的 `NEW PROJECT`、`OPEN`、`RECENT OPEN`、`NEWS` 已成功轉為 `新增專案`、`開啟`、`最近開啟`、`最新消息`
+- 主啟動畫面上的 `NEW PROJECT`、`OPEN`、`RECENT OPEN`、`NEWS` 已成功轉為 `新增專案`、`開啟`、`最近開啟`、`新聞欄`
 - 這部分不是現有 `28` 個 `.strings` 文件覆蓋到的界面，而是額外的 compiled nib 補丁
 - 右側新聞內容仍保留原始來源語言，屬於內容層而不是 UI shell 漏翻
 

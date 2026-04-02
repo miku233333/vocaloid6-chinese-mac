@@ -36,6 +36,7 @@
 - 已確認安裝後的副本 app 可直接重新啟動
 - 已確認 app 使用者語言偏好可由安裝器寫入 `zh-TW`
 - 已確認主啟動畫面來自 `VEHomeWC` compiled nib，且已在副本 app 實測將 `NEW PROJECT / OPEN / RECENT OPEN / NEWS` 轉為繁體中文
+- 已加入 Finder 可雙擊的一鍵安裝入口，原 app 不可寫時會自動回退到使用者副本
 
 ---
 
@@ -70,6 +71,10 @@
   繁體中文翻譯詞條
 - [scripts/installer.py](./scripts/installer.py)
   Mac 安裝 / 還原 / 卸載入口
+- [scripts/one_click_install.py](./scripts/one_click_install.py)
+  一鍵安裝策略入口
+- [One-Click Install.command](./One-Click%20Install.command)
+  Finder 可雙擊的一鍵安裝腳本
 - [scripts/extract_resources.py](./scripts/extract_resources.py)
   資源提取工具
 - [scripts/extract_strings.py](./scripts/extract_strings.py)
@@ -145,7 +150,26 @@ python3 scripts/bootstrap_real_keys.py
 
 - `data/translations/zh-TW.json`
 
-### 5. 安裝繁體中文語言包
+### 5. 一鍵安裝繁體中文語言包
+
+在 Finder 直接雙擊：
+
+- [One-Click Install.command](./One-Click%20Install.command)
+
+或命令列執行：
+
+```bash
+python3 scripts/one_click_install.py
+```
+
+這個入口目前會：
+
+- 優先嘗試直接安裝到現有 `VOCALOID6 Editor.app`
+- 若 `/Applications` 下的原始 app 不可寫，則自動安裝到
+  `~/Applications/VOCALOID6 Editor zh-TW.app`
+- 自動完成備份、安裝、重簽名與啟動
+
+### 6. 傳統安裝繁體中文語言包
 
 ```bash
 ./install.sh
@@ -162,13 +186,13 @@ python3 scripts/bootstrap_real_keys.py
 
 它**不代表所有 UI 都已完成漢化**，但已不再只是“空骨架安裝”。
 
-### 6. 卸載 / 還原
+### 7. 卸載 / 還原
 
 ```bash
 ./uninstall.sh
 ```
 
-### 7. 安全測試安裝到副本 app
+### 8. 安全測試安裝到副本 app
 
 如果你不想直接動正式安裝，可以先複製一份 app 再測：
 
@@ -181,7 +205,7 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 
 安裝器現在還會自動對修改過的 `.app` 做 ad-hoc 重簽名，避免因 bundle 被修改而無法啟動。
 
-### 8. 一鍵冒煙測試
+### 9. 一鍵冒煙測試
 
 ```bash
 python3 scripts/smoke_test_install.py
@@ -195,7 +219,7 @@ python3 scripts/smoke_test_install.py
 - 驗證 `codesign --verify --deep --strict`
 - 嘗試啟動測試副本並確認進程存在
 
-### 9. 清洗 `.nib` 可見 UI 文案
+### 10. 清洗 `.nib` 可見 UI 文案
 
 ```bash
 python3 scripts/bootstrap_nib_visible_texts.py
@@ -213,7 +237,7 @@ python3 scripts/bootstrap_nib_visible_texts.py
 - 清洗後較像可見 UI 的唯一候選：`283`
 - 已可自動匹配繁中建議翻譯：`134`
 
-### 10. 分析 compiled nib 啟動畫面
+### 11. 分析 compiled nib 啟動畫面
 
 ```bash
 python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Contents/Resources/VEHomeWC.nib" --contains "PROJECT"

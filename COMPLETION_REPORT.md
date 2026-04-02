@@ -27,7 +27,9 @@
 - [x] `zh-TW.json` 目前共有 `700` 條翻譯
 - [x] `.nib` 可見文案 bootstrap 腳本
 - [x] `VEHomeWC` compiled nib 首頁靜態文案補丁
-- [x] 副本 app 截圖驗證 `新增專案 / 開啟 / 最近開啟 / 最新消息`
+- [x] 副本 app 截圖驗證 `新增專案 / 開啟 / 最近開啟 / 新聞欄`
+- [x] Finder 可雙擊的一鍵安裝入口
+- [x] 原 app 不可寫時自動回退到 `~/Applications` 使用者副本
 
 **🟡 部分完成**
 
