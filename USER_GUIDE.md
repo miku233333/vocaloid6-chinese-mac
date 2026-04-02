@@ -147,6 +147,21 @@ python3 scripts/bootstrap_nib_visible_texts.py
 - 清洗後可見 UI 唯一候選：`283`
 - 已可自動匹配繁中建議翻譯：`134`
 
+#### 步驟 10: 分析主啟動畫面的 compiled nib
+
+```bash
+python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Contents/Resources/VEHomeWC.nib" --contains "PROJECT"
+```
+
+這一步適合用來追：
+
+- `NEW PROJECT`
+- `OPEN`
+- `NEWS`
+- `RECENT OPEN`
+
+也就是目前主啟動畫面上還沒被繁中化的那一批硬嵌英文。
+
 ---
 
 ## 🔧 卸載

@@ -77,6 +77,30 @@
 - 驗證 `codesign`
 - 啟動副本 app 並確認進程存在
 
+### 5. 真實截圖已確認主啟動畫面仍是英文
+
+已完成：
+
+- 重新申請並取得 macOS Screen Recording 權限
+- 抓取 `VOCALOID6 Editor Test.app` 主窗口截圖
+
+目前可確認：
+
+- 主啟動畫面上的 `NEW PROJECT`、`OPEN`、`RECENT OPEN`、`NEWS` 仍顯示英文
+- 這部分不是現有 `28` 個 `.strings` 文件覆蓋到的界面
+- 根因已收斂到 `VEHomeWC` 這個 compiled nib
+
+### 6. 已能分析 compiled nib 內嵌字串
+
+已新增：
+
+- [scripts/analyze_compiled_nib.py](../scripts/analyze_compiled_nib.py)
+
+已確認：
+
+- `VEHomeWC.nib/keyedobjects-*.nib` 內直接包含 `NEW PROJECT`、`OPEN`、`NEWS`、`RECENT OPEN`
+- 這些字串已有可重現的偏移與長度標記輸出
+
 ### 4. 繁體中文 `.strings` 詞條已達完整覆蓋
 
 目前 `zh-TW.json` 共有 **700** 條翻譯。

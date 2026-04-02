@@ -10,6 +10,7 @@ import sys
 import json
 import shutil
 import subprocess
+import plistlib
 from pathlib import Path
 from typing import Optional
 import argparse
@@ -30,6 +31,90 @@ class VocaloidInstaller:
         self.backup_base = Path.home() / ".vocaloid6-backup"
         self.script_dir = Path(__file__).parent
         self.data_dir = self.script_dir.parent / "data"
+
+    def get_bundle_identifier(self, app_path: Path) -> Optional[str]:
+        """讀取 app 的 bundle identifier"""
+        info_plist = app_path / "Contents/Info.plist"
+        if not info_plist.exists():
+            return None
+        try:
+            with open(info_plist, 'rb') as f:
+                plist_data = plistlib.load(f)
+            return plist_data.get("CFBundleIdentifier")
+        except Exception:
+            return None
+
+    def read_domain_default(self, domain: str, key: str):
+        """讀取 macOS user defaults"""
+        try:
+            result = subprocess.run(
+                ["defaults", "export", domain, "-"],
+                check=True,
+                capture_output=True,
+            )
+            payload = plistlib.loads(result.stdout)
+            return payload.get(key)
+        except Exception:
+            return None
+
+    def write_language_defaults(self, bundle_id: Optional[str]):
+        """為目標 app 設定使用者層級語言偏好"""
+        if not bundle_id:
+            return
+        try:
+            subprocess.run(
+                ["defaults", "write", bundle_id, "AppleLanguages", "-array", self.language],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            locale = self.language.replace("-", "_")
+            subprocess.run(
+                ["defaults", "write", bundle_id, "AppleLocale", locale],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            print(f"✅ 已設定 {bundle_id} 的使用者語言偏好為 {self.language}")
+        except subprocess.CalledProcessError as e:
+            stderr = e.stderr.strip() if e.stderr else str(e)
+            print(f"⚠️ 寫入 app 語言偏好失敗：{stderr}")
+
+    def restore_language_defaults(self, bundle_id: Optional[str], state: dict | None):
+        """恢復安裝前的 user defaults 語言偏好"""
+        if not bundle_id:
+            return
+        try:
+            if not state or not state.get("had_domain"):
+                subprocess.run(["defaults", "delete", bundle_id], check=False, capture_output=True, text=True)
+                print(f"✅ 已清除 {bundle_id} 的使用者語言偏好")
+                return
+
+            if state.get("apple_languages") is None:
+                subprocess.run(["defaults", "delete", bundle_id, "AppleLanguages"], check=False, capture_output=True, text=True)
+            else:
+                langs = state["apple_languages"]
+                if not isinstance(langs, list):
+                    langs = [langs]
+                subprocess.run(
+                    ["defaults", "write", bundle_id, "AppleLanguages", "-array", *[str(x) for x in langs]],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+
+            if state.get("apple_locale") is None:
+                subprocess.run(["defaults", "delete", bundle_id, "AppleLocale"], check=False, capture_output=True, text=True)
+            else:
+                subprocess.run(
+                    ["defaults", "write", bundle_id, "AppleLocale", str(state["apple_locale"])],
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                )
+            print(f"✅ 已恢復 {bundle_id} 的使用者語言偏好")
+        except Exception as e:
+            print(f"⚠️ 恢復 app 語言偏好失敗：{e}")
         
     def find_vocaloid_installations(self) -> list:
         """查找系統中所有 VOCALOID6 安裝"""
@@ -118,6 +203,19 @@ class VocaloidInstaller:
             "version": "1.0",
             "app_name": self.app_name
         }
+
+        bundle_id = self.get_bundle_identifier(app_path)
+        if bundle_id:
+            metadata["bundle_id"] = bundle_id
+            metadata["defaults_state"] = {
+                "had_domain": subprocess.run(
+                    ["defaults", "domains"],
+                    capture_output=True,
+                    text=True,
+                ).stdout.find(bundle_id) != -1,
+                "apple_languages": self.read_domain_default(bundle_id, "AppleLanguages"),
+                "apple_locale": self.read_domain_default(bundle_id, "AppleLocale"),
+            }
         
         with open(backup_path / "backup_metadata.json", 'w', encoding='utf-8') as f:
             json.dump(metadata, f, ensure_ascii=False, indent=2)
@@ -155,6 +253,7 @@ class VocaloidInstaller:
         
         # 創建 Info.plist 覆蓋（如果需要）
         self.patch_info_plist(app_path)
+        self.write_language_defaults(self.get_bundle_identifier(app_path))
         self.resign_app(app_path)
         
         print(f"✅ 語言包安裝完成")
@@ -185,7 +284,6 @@ class VocaloidInstaller:
             return
             
         try:
-            import plistlib
             with open(info_plist, 'rb') as f:
                 plist_data = plistlib.load(f)
                 
@@ -328,8 +426,12 @@ class VocaloidInstaller:
             with open(metadata_file, 'r', encoding='utf-8') as f:
                 meta = json.load(f)
             app_path = Path(meta.get('app_path', ''))
+            bundle_id = meta.get('bundle_id')
+            defaults_state = meta.get('defaults_state')
         else:
             app_path = self.detect_installation()
+            bundle_id = self.get_bundle_identifier(app_path) if app_path else None
+            defaults_state = None
             
         if not app_path or not app_path.exists():
             print("❌ 找不到原應用路徑")
@@ -351,6 +453,8 @@ class VocaloidInstaller:
             
         # 複製備份
         shutil.copytree(backup_resources, resources_path)
+        self.restore_language_defaults(bundle_id, defaults_state)
+        self.resign_app(app_path)
         
         print(f"✅ 還原完成！")
         print(f"📁 應用已恢復到安裝漢化包前的狀態")
@@ -372,6 +476,13 @@ class VocaloidInstaller:
             print(f"✅ 已卸載 {self.language} 語言包")
         else:
             print(f"ℹ️  {self.language} 語言包未安裝")
+
+        bundle_id = self.get_bundle_identifier(app_path)
+        if bundle_id:
+            subprocess.run(["defaults", "delete", bundle_id, "AppleLanguages"], check=False, capture_output=True, text=True)
+            subprocess.run(["defaults", "delete", bundle_id, "AppleLocale"], check=False, capture_output=True, text=True)
+            print(f"✅ 已清除 {bundle_id} 的語言偏好覆蓋")
+        self.resign_app(app_path)
 
 
 def main():

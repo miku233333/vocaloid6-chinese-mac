@@ -34,6 +34,8 @@
 - 已在副本 app 上完成多次安全安裝驗證
 - 安裝器現在會對修改後的副本 app 自動做 ad-hoc 重簽名
 - 已確認安裝後的副本 app 可直接重新啟動
+- 已確認 app 使用者語言偏好可由安裝器寫入 `zh-TW`
+- 已確認主啟動畫面來自 `VEHomeWC` compiled nib，目前仍是英文
 
 ---
 
@@ -77,6 +79,8 @@
   一鍵驗證副本安裝、重簽名、codesign 與啟動
 - [scripts/bootstrap_nib_visible_texts.py](./scripts/bootstrap_nib_visible_texts.py)
   清洗 `.nib` 可見文案並自動匹配繁體中文建議翻譯
+- [scripts/analyze_compiled_nib.py](./scripts/analyze_compiled_nib.py)
+  分析 compiled nib 內嵌字串偏移，供未來定向 patch 參考
 - [USER_GUIDE.md](./USER_GUIDE.md)
   使用說明
 - [COMPLETION_REPORT.md](./COMPLETION_REPORT.md)
@@ -205,6 +209,18 @@ python3 scripts/bootstrap_nib_visible_texts.py
 - 清洗後較像可見 UI 的唯一候選：`283`
 - 已可自動匹配繁中建議翻譯：`134`
 
+### 10. 分析 compiled nib 啟動畫面
+
+```bash
+python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Contents/Resources/VEHomeWC.nib" --contains "PROJECT"
+```
+
+目前已確認：
+
+- 啟動畫面主窗口來自 `VEHomeWC.nib`
+- `NEW PROJECT`、`OPEN`、`NEWS`、`RECENT OPEN` 這些文字直接內嵌在 `keyedobjects-*.nib`
+- 它們目前不在現有 `28` 個 `.strings` 文件覆蓋範圍內
+
 ---
 
 ## 支援的安裝路徑
@@ -240,6 +256,7 @@ python3 scripts/bootstrap_nib_visible_texts.py
 - 已確認 `codesign --verify --deep --strict` 通過
 - 已有 `scripts/smoke_test_install.py` 可一鍵重跑整條驗證鏈
 - 已有 `scripts/bootstrap_nib_visible_texts.py` 可把 `.nib` 層收斂成可維護清單
+- 已有 `scripts/analyze_compiled_nib.py` 可定位 `VEHomeWC` 這類 compiled nib 的內嵌英文
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---
@@ -247,6 +264,7 @@ python3 scripts/bootstrap_nib_visible_texts.py
 ## 已知限制
 
 - `zh-TW.json` 已有 `700` 條翻譯，但 `.nib` / 視覺層仍未做完
+- 啟動畫面 `VEHomeWC` 目前仍是英文，因為它走 compiled nib 而不是現有 `.strings` 管線
 - 尚未確認所有版本的 VOCALOID6 Mac 都使用相同資源結構
 - 沒有可直接分發的原版資源替換結果
 - [docs/TEST_REPORT.md](./docs/TEST_REPORT.md) 現在只代表「工具鏈驗證狀態」，不是完整產品測試結論
