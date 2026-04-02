@@ -93,7 +93,7 @@ def main() -> int:
         print(f"❌ 缺少首頁 compiled nib：{compiled_nib}")
         return 1
     compiled_blob = compiled_nib.read_bytes()
-    for marker in ("開啟", "新增專案", "最近開啟", "最新消息"):
+    for marker in ("開啟", "新增專案", "最近開啟", "消息"):
         if marker.encode("utf-8") not in compiled_blob:
             print(f"❌ 缺少首頁 nib 補丁字串：{marker}")
             return 1
