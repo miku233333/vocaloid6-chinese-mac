@@ -12,6 +12,8 @@ from typing import Dict, List, Tuple
 import argparse
 from datetime import datetime
 
+from private_data import private_translation_path
+
 
 class ResourceReplacer:
     """VOCALOID6 資源替換引擎 - 零侵入式"""
@@ -21,7 +23,7 @@ class ResourceReplacer:
         self.language = language
         self.resources_path = self.app_path / "Contents" / "Resources"
         self.backup_path = Path.home() / ".vocaloid6-backup" / datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.translation_file = Path(__file__).parent.parent / "data" / "translations" / f"{language}.json"
+        self.translation_file = private_translation_path(language)
         self.terminology_file = Path(__file__).parent.parent / "data" / "terminology" / "vocaloid_terms.yml"
         self.extracted_strings_file = Path(__file__).parent.parent / "output" / "extracted_strings.json"
         self.translations: Dict[str, str] = {}
@@ -30,7 +32,11 @@ class ResourceReplacer:
     def load_translations(self):
         """載入翻譯文件"""
         if not self.translation_file.exists():
-            raise FileNotFoundError(f"翻譯文件不存在：{self.translation_file}")
+            raise FileNotFoundError(
+                f"翻譯文件不存在：{self.translation_file}\n"
+                "公開倉庫不再附帶 VOCALOID6 專用翻譯資料，"
+                "請先在本機私有資料目錄生成或放入對應文件。"
+            )
             
         with open(self.translation_file, 'r', encoding='utf-8') as f:
             data = json.load(f)

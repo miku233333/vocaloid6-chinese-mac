@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from installer import VocaloidInstaller
+from private_data import private_translation_path
 
 
 def run(cmd: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -71,6 +72,13 @@ def main() -> int:
 
     source_app = resolve_source_app(args.source_app, args.lang)
     copy_target = Path(args.copy_target).expanduser()
+    translation_file = private_translation_path(args.lang)
+
+    if not translation_file.exists():
+        print("❌ 找不到本機私有翻譯資料")
+        print(f"   需要：{translation_file}")
+        print("   公開倉庫不再附帶 VOCALOID6 專用翻譯資料，請先在本機私有目錄生成或放入對應文件。")
+        return 1
 
     print("🎵 VOCALOID6 Mac 繁體中文一鍵安裝")
     print("=" * 50)

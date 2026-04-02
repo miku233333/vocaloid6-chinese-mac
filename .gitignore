@@ -6,3 +6,7 @@ output/
 vocaloid6-localization/
 tmp/
 .venv-tools/
+data/glossaries/*.json
+!data/glossaries/README.md
+data/translations/*.json
+!data/translations/README.md

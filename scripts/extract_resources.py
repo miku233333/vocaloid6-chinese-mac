@@ -176,7 +176,7 @@ def main():
         print("\n" + "=" * 60)
         print("  下一步：")
         print("  1. 檢查 extracted_resources/ 目錄")
-        print("  2. 編輯翻譯文件 (data/translations/zh-TW.json)")
+        print("  2. 在本機私有資料目錄編輯翻譯文件 (~/.vocaloid6-chinese-mac-private/translations/zh-TW.json)")
         print("  3. 運行安裝器 (install.sh)")
         print("=" * 60)
         

@@ -16,7 +16,7 @@
 - 資源提取工具：[scripts/extract_resources.py](../scripts/extract_resources.py)
 - 字串提取工具：[scripts/extract_strings.py](../scripts/extract_strings.py)
 - 替換工具：[scripts/resource_replacer.py](../scripts/resource_replacer.py)
-- 繁體中文詞條：[data/translations/zh-TW.json](../data/translations/zh-TW.json)
+- 私有翻譯資料入口：[data/translations/README.md](../data/translations/README.md)
 
 ### 2. 真實 app 資源提取已驗證可行
 
@@ -35,6 +35,8 @@
 - `613` 個真實提取 `.strings` key 已全部匹配
 - `unmatched_count = 0`
 - `28` 個可生成的 `zh-TW.lproj/*.strings` 文件
+
+上述翻譯與補丁資料現已改為**本機私有保存**，不再隨公開倉庫分發。
 
 目前已能穩定生成：
 

@@ -20,6 +20,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from private_data import private_glossary_path
+
 
 MAGIC_BYTES = b"NIBArchive"
 
@@ -265,7 +267,7 @@ def serialize_archive(archive: Archive) -> bytes:
 class CompiledNibPatcher:
     def __init__(self, language: str = "zh-TW", config_path: str | Path | None = None):
         self.language = language
-        default_config = Path(__file__).resolve().parent.parent / "data" / "glossaries" / f"compiled-nib-{language}.json"
+        default_config = private_glossary_path(f"compiled-nib-{language}.json")
         self.config_path = Path(config_path).expanduser() if config_path else default_config
         self.patches = self._load_patches()
 

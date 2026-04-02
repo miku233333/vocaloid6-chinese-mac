@@ -1,9 +1,9 @@
 # VOCALOID6 Mac 繁體中文漢化工程
 
-**狀態**: 高覆蓋準正式版  
+**狀態**: 工具鏈公開版  
 **目標平台**: macOS  
 **主要語言**: 繁體中文（`zh-TW`）  
-**當前定位**: 已完成 `.strings` 真實 key 全覆蓋，並補上首頁 compiled nib 靜態文案的 Mac 繁體中文漢化工程
+**當前定位**: 公開倉庫僅保留通用安裝 / 提取 / 套用工具；VOCALOID6 專用翻譯與補丁資料改為本機私有保存
 
 ---
 
@@ -13,12 +13,32 @@
 
 目前倉庫提供的是：
 
-- 繁體中文翻譯詞條
 - Mac 專用的安裝 / 卸載 / 還原腳本
 - 資源提取與字串提取工具
+- 本機私有資料的載入規約
 - 一套可繼續擴展的漢化工程骨架
 
 目前**還沒有**做完完整視覺層驗收的正式 `resources/` 漢化成品，但已完成基於真實 app 的端到端安裝與啟動驗證。
+
+## 版權與公開策略
+
+這個公開倉庫現在刻意**不再附帶**下列 VOCALOID6 專用內容：
+
+- 從 app 提取或整理出的來源文本
+- 產品專用翻譯詞條
+- compiled nib 定向補丁映射
+- 任何可直接重建 VOCALOID6 本地化內容的派生資料
+
+這些資料應放在你的**本機私有目錄**：
+
+- `~/.vocaloid6-chinese-mac-private/glossaries/`
+- `~/.vocaloid6-chinese-mac-private/translations/`
+
+也可以用環境變數覆蓋：
+
+```bash
+export VOCALOID6_PRIVATE_DATA_DIR=/your/private/path
+```
 
 但和之前不同的是：
 
@@ -28,8 +48,8 @@
 - 已成功整理出 `8494` 條 `.nib` UI 候選文本
 - 已把 `.nib` 原始候選清洗成 `283` 條較像真實 UI 的可見文案
 - 其中 `134` 條已可自動匹配到繁體中文建議翻譯
-- 已把 `zh-TW` 詞條完整接到真實 app key，當前共有 `700` 條翻譯
-- 已完成 `613` 個真實提取 `.strings` key 的覆蓋，`unmatched_count = 0`
+- 已在本機私有資料目錄完成 `zh-TW` 詞條與真實 app key 的接回
+- 已在本機私有資料目錄完成 `.strings` key 全覆蓋驗證
 - 已能生成 `28` 個 `zh-TW.lproj/*.strings` 文件作為安裝輸出
 - 已在副本 app 上完成多次安全安裝驗證
 - 安裝器現在會對修改後的副本 app 自動做 ad-hoc 重簽名
@@ -42,11 +62,10 @@
 
 ## 當前真實完成度
 
-如果只看 `.strings` 字層、安裝鏈路、以及首頁核心靜態 UI，現在已接近 **完成版**；如果把所有頁面的逐頁視覺驗收與不同版本兼容性也算進去，整體仍然是 **高覆蓋準正式版**。
+如果只看本機私有資料配合這套工具鏈的效果，`.strings` 字層、安裝鏈路、以及首頁核心靜態 UI 已接近完成；如果把所有頁面的逐頁視覺驗收與不同版本兼容性也算進去，整體仍然是 **高覆蓋準正式版**。
 
 已完成：
 
-- `zh-TW` 翻譯詞條文件
 - 真實 key bootstrap 腳本
 - Mac 安裝器 / 卸載器 Python 骨架
 - 資源提取工具
@@ -67,8 +86,10 @@
 
 ## 倉庫結構
 
-- [data/translations/zh-TW.json](./data/translations/zh-TW.json)
-  繁體中文翻譯詞條
+- [data/translations/README.md](./data/translations/README.md)
+  說明私有翻譯資料應放在哪裡
+- [data/glossaries/README.md](./data/glossaries/README.md)
+  說明私有 glossary / patch 資料應放在哪裡
 - [scripts/installer.py](./scripts/installer.py)
   Mac 安裝 / 還原 / 卸載入口
 - [scripts/one_click_install.py](./scripts/one_click_install.py)
@@ -103,6 +124,7 @@
 - 僅適用於 **macOS 上的 VOCALOID6**
 - 請先備份原始應用
 - 請使用正版軟件
+- 公開倉庫不再直接附帶 VOCALOID6 專用翻譯/補丁資料
 - 目前屬於開發中工程，**不要把它當成已驗證完成的正式漢化包**
 
 ---
@@ -111,7 +133,9 @@
 
 ### 0. 從 GitHub Releases 下載
 
-如果你只是想直接拿來安裝，不想先讀完整倉庫，可以優先去 GitHub 的 `Releases` 頁面下載目前的測試版，然後直接雙擊：
+如果你只是想直接拿來安裝，不想先讀完整倉庫，可以優先去 GitHub 的 `Releases` 頁面下載目前的測試版。
+
+注意：公開 release 只包含工具，不再附帶 VOCALOID6 專用翻譯資料；你仍需要在本機私有目錄放入或生成對應資料後，再執行：
 
 - `One-Click Install.command`
 
@@ -143,7 +167,18 @@ python3 scripts/extract_strings.py "/Applications/VOCALOID6 Editor.app" -o ./out
 - `output/nib_ui_candidates.json`
 - `output/extraction_report.md`
 
-### 4. 把真實 key 接回 `zh-TW`
+### 4. 準備本機私有翻譯資料
+
+先建立私有目錄：
+
+```bash
+mkdir -p ~/.vocaloid6-chinese-mac-private/glossaries
+mkdir -p ~/.vocaloid6-chinese-mac-private/translations
+```
+
+然後把你自己的 VOCALOID6 專用 glossary / translation 放進去，或由你本機私有流程生成。
+
+### 5. 把真實 key 接回 `zh-TW`
 
 ```bash
 python3 scripts/bootstrap_real_keys.py
@@ -152,13 +187,13 @@ python3 scripts/bootstrap_real_keys.py
 這一步會根據：
 
 - `output/extracted_strings.json`
-- `data/glossaries/source-text-zh-TW.json`
+- `~/.vocaloid6-chinese-mac-private/glossaries/source-text-zh-TW.json`
 
 把可匹配的真實 app key 回填到：
 
-- `data/translations/zh-TW.json`
+- `~/.vocaloid6-chinese-mac-private/translations/zh-TW.json`
 
-### 5. 一鍵安裝繁體中文語言包
+### 6. 一鍵安裝繁體中文語言包
 
 在 Finder 直接雙擊：
 
@@ -177,7 +212,7 @@ python3 scripts/one_click_install.py
   `~/Applications/VOCALOID6 Editor zh-TW.app`
 - 自動完成備份、安裝、重簽名與啟動
 
-### 6. 傳統安裝繁體中文語言包
+### 7. 傳統安裝繁體中文語言包
 
 ```bash
 ./install.sh
@@ -194,13 +229,13 @@ python3 scripts/one_click_install.py
 
 它**不代表所有 UI 都已完成漢化**，但已不再只是“空骨架安裝”。
 
-### 7. 卸載 / 還原
+### 8. 卸載 / 還原
 
 ```bash
 ./uninstall.sh
 ```
 
-### 8. 安全測試安裝到副本 app
+### 9. 安全測試安裝到副本 app
 
 如果你不想直接動正式安裝，可以先複製一份 app 再測：
 
@@ -213,7 +248,7 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 
 安裝器現在還會自動對修改過的 `.app` 做 ad-hoc 重簽名，避免因 bundle 被修改而無法啟動。
 
-### 9. 一鍵冒煙測試
+### 10. 一鍵冒煙測試
 
 ```bash
 python3 scripts/smoke_test_install.py
@@ -227,7 +262,7 @@ python3 scripts/smoke_test_install.py
 - 驗證 `codesign --verify --deep --strict`
 - 嘗試啟動測試副本並確認進程存在
 
-### 10. 清洗 `.nib` 可見 UI 文案
+### 11. 清洗 `.nib` 可見 UI 文案
 
 ```bash
 python3 scripts/bootstrap_nib_visible_texts.py

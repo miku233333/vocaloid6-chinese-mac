@@ -14,6 +14,8 @@ import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from private_data import private_glossary_path
+
 
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
@@ -137,8 +139,8 @@ def lookup_translation(text: str, glossary: dict[str, tuple[str, str]]) -> tuple
 def main() -> int:
     parser = argparse.ArgumentParser(description="Bootstrap visible nib UI text translations")
     parser.add_argument("--input", default="output/nib_ui_candidates.json")
-    parser.add_argument("--source-glossary", default="data/glossaries/source-text-zh-TW.json")
-    parser.add_argument("--ui-glossary", default="data/glossaries/nib-visible-zh-TW.json")
+    parser.add_argument("--source-glossary", default=str(private_glossary_path("source-text-zh-TW.json")))
+    parser.add_argument("--ui-glossary", default=str(private_glossary_path("nib-visible-zh-TW.json")))
     parser.add_argument("--output-dir", default="output")
     args = parser.parse_args()
 

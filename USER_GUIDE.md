@@ -14,6 +14,7 @@
 3. **請支持正版軟件**
 4. **安裝前務必備份原始文件**
 5. **請預期可能需要手動調整**
+6. **公開倉庫不再附帶 VOCALOID6 專用翻譯 / glossary / patch 資料**
 
 ### 系統要求
 
@@ -44,11 +45,15 @@
 git clone https://github.com/miku233333/vocaloid6-chinese-mac.git
 cd vocaloid6-chinese-mac
 
-# 2. 雙擊 One-Click Install.command
+# 2. 先準備本機私有資料目錄：
+mkdir -p ~/.vocaloid6-chinese-mac-private/glossaries
+mkdir -p ~/.vocaloid6-chinese-mac-private/translations
+
+# 3. 雙擊 One-Click Install.command
 #    或命令列執行：
 python3 scripts/one_click_install.py
 
-# 3. 重啟 VOCALOID6 Editor
+# 4. 重啟 VOCALOID6 Editor
 ```
 
 一鍵安裝器會：
@@ -89,13 +94,13 @@ python3 scripts/bootstrap_real_keys.py
 
 這一步會把已知來源文本對應到真實 app key，更新：
 
-- `data/translations/zh-TW.json`
+- `~/.vocaloid6-chinese-mac-private/translations/zh-TW.json`
 
 #### 步驟 4: 編輯翻譯文件
 
 目前主要編輯：
 
-- `data/translations/zh-TW.json`
+- `~/.vocaloid6-chinese-mac-private/translations/zh-TW.json`
 - `output/translation_template.csv`
 
 #### 步驟 5: 生成本地化包
@@ -223,8 +228,8 @@ python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Cont
 
 **A**: 
 1. Fork 本倉庫
-2. 編輯 `data/translations/zh-TW.json`
-3. 提交 Pull Request
+2. 貢獻工具、流程、文檔或不含 Yamaha 派生文本的泛用能力
+3. 不要在公開 PR 直接提交 VOCALOID6 專用翻譯資料
 
 ### Q4: 支持簡體中文嗎？
 

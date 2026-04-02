@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 from typing import Dict
 
+from private_data import private_glossary_path, private_translation_path
+
 
 def load_json(path: Path) -> Dict:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -27,12 +29,12 @@ def main() -> None:
     )
     parser.add_argument(
         "--glossary",
-        default="data/glossaries/source-text-zh-TW.json",
+        default=str(private_glossary_path("source-text-zh-TW.json")),
         help="來源文本到繁中譯文的對照表",
     )
     parser.add_argument(
         "--translation",
-        default="data/translations/zh-TW.json",
+        default=str(private_translation_path("zh-TW")),
         help="zh-TW 翻譯文件路徑",
     )
     args = parser.parse_args()
