@@ -53,6 +53,9 @@
 - 成功建立備份
 - 成功在副本 `Info.plist` 寫入 `zh-TW`
 - 成功安裝 `28` 個 `.strings` 文件
+- 成功對修改後的副本 app 執行 ad-hoc 重簽名
+- `codesign --verify --deep --strict` 通過
+- 已確認副本 app 安裝後可直接重新啟動
 - `VEPreferencesVC.strings`、`VEAddTrackVC.strings`、`Localizable.strings` 均確認有繁體中文內容
 
 ### 4. 繁體中文 `.strings` 詞條已達完整覆蓋
@@ -90,7 +93,7 @@
 原因很簡單：
 
 - 倉庫內沒有正式漢化產物
-- 沒有可信的實機測試證據隨倉庫保存
+- 尚未有逐頁 UI 截圖與視覺驗收證據隨倉庫保存
 - 文檔先前把工程骨架寫得像成品
 
 ---

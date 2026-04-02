@@ -155,6 +155,7 @@ class VocaloidInstaller:
         
         # 創建 Info.plist 覆蓋（如果需要）
         self.patch_info_plist(app_path)
+        self.resign_app(app_path)
         
         print(f"✅ 語言包安裝完成")
         
@@ -202,6 +203,26 @@ class VocaloidInstaller:
                 
         except Exception as e:
             print(f"⚠️ 修改 Info.plist 失敗：{e}")
+
+    def resign_app(self, app_path: Path):
+        """對修改後的 .app 進行 ad-hoc 重簽名，避免因 bundle 被改動而無法啟動"""
+        try:
+            subprocess.run(
+                ['codesign', '--force', '--deep', '--sign', '-', '--timestamp=none', str(app_path)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            subprocess.run(
+                ['codesign', '--verify', '--deep', '--strict', str(app_path)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            print("✅ 已完成 app ad-hoc 重簽名")
+        except subprocess.CalledProcessError as e:
+            stderr = e.stderr.strip() if e.stderr else str(e)
+            print(f"⚠️ 重簽名失敗：{stderr}")
             
     def create_shortcut(self, app_path: Path):
         """創建桌面快捷方式（可選）"""

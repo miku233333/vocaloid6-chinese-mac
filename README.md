@@ -18,7 +18,7 @@
 - 資源提取與字串提取工具
 - 一套可繼續擴展的漢化工程骨架
 
-目前**還沒有**驗證完成的正式 `resources/` 漢化產物，也**沒有**完整的端到端安裝驗證結論。
+目前**還沒有**做完完整視覺層驗收的正式 `resources/` 漢化成品，但已完成基於真實 app 的端到端安裝與啟動驗證。
 
 但和之前不同的是：
 
@@ -30,6 +30,8 @@
 - 已完成 `613` 個真實提取 `.strings` key 的覆蓋，`unmatched_count = 0`
 - 已能生成 `28` 個 `zh-TW.lproj/*.strings` 文件作為安裝輸出
 - 已在副本 app 上完成多次安全安裝驗證
+- 安裝器現在會對修改後的副本 app 自動做 ad-hoc 重簽名
+- 已確認安裝後的副本 app 可直接重新啟動
 
 ---
 
@@ -163,6 +165,8 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 
 這條路徑目前已經驗證可用。
 
+安裝器現在還會自動對修改過的 `.app` 做 ad-hoc 重簽名，避免因 bundle 被修改而無法啟動。
+
 ---
 
 ## 支援的安裝路徑
@@ -194,13 +198,15 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 - 字串提取工具已不再卡在編碼解碼錯誤
 - 已能為 `zh-TW.lproj` 生成 `28` 個本地化 strings 文件
 - 已在 `VOCALOID6 Editor Test.app` 副本上成功完成一次安裝
+- 已在安裝後直接重新打開 `VOCALOID6 Editor Test.app`
+- 已確認 `codesign --verify --deep --strict` 通過
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---
 
 ## 已知限制
 
-- 目前只有少量翻譯詞條，覆蓋仍不足
+- `zh-TW.json` 已有 `700` 條翻譯，但 `.nib` / 視覺層仍未做完
 - 尚未確認所有版本的 VOCALOID6 Mac 都使用相同資源結構
 - 沒有可直接分發的原版資源替換結果
 - [docs/TEST_REPORT.md](./docs/TEST_REPORT.md) 現在只代表「工具鏈驗證狀態」，不是完整產品測試結論
