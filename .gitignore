@@ -5,3 +5,4 @@ extracted_resources/
 output/
 vocaloid6-localization/
 tmp/
+.venv-tools/

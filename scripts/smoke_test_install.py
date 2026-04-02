@@ -88,6 +88,17 @@ def main() -> int:
         return 1
     print(f"3. 本地化輸出存在：{len(strings_files)} 個 .strings 文件")
 
+    compiled_nib = resources / "VEHomeWC.nib" / "keyedobjects-110000.nib"
+    if not compiled_nib.exists():
+        print(f"❌ 缺少首頁 compiled nib：{compiled_nib}")
+        return 1
+    compiled_blob = compiled_nib.read_bytes()
+    for marker in ("開啟", "新增專案", "最近開啟", "最新消息"):
+        if marker.encode("utf-8") not in compiled_blob:
+            print(f"❌ 缺少首頁 nib 補丁字串：{marker}")
+            return 1
+    print("3b. 首頁 compiled nib 補丁存在")
+
     print("4. 驗證 codesign")
     run(["codesign", "--verify", "--deep", "--strict", str(test_app)])
     print("✅ codesign 驗證通過")

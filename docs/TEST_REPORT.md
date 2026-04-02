@@ -77,7 +77,7 @@
 - 驗證 `codesign`
 - 啟動副本 app 並確認進程存在
 
-### 5. 真實截圖已確認主啟動畫面仍是英文
+### 5. 真實截圖已確認主啟動畫面核心靜態文案可轉為繁體中文
 
 已完成：
 
@@ -86,20 +86,22 @@
 
 目前可確認：
 
-- 主啟動畫面上的 `NEW PROJECT`、`OPEN`、`RECENT OPEN`、`NEWS` 仍顯示英文
-- 這部分不是現有 `28` 個 `.strings` 文件覆蓋到的界面
-- 根因已收斂到 `VEHomeWC` 這個 compiled nib
+- 主啟動畫面上的 `NEW PROJECT`、`OPEN`、`RECENT OPEN`、`NEWS` 已成功轉為 `新增專案`、`開啟`、`最近開啟`、`最新消息`
+- 這部分不是現有 `28` 個 `.strings` 文件覆蓋到的界面，而是額外的 compiled nib 補丁
+- 右側新聞內容仍保留原始來源語言，屬於內容層而不是 UI shell 漏翻
 
 ### 6. 已能分析 compiled nib 內嵌字串
 
 已新增：
 
 - [scripts/analyze_compiled_nib.py](../scripts/analyze_compiled_nib.py)
+- [scripts/patch_compiled_nibs.py](../scripts/patch_compiled_nibs.py)
 
 已確認：
 
 - `VEHomeWC.nib/keyedobjects-*.nib` 內直接包含 `NEW PROJECT`、`OPEN`、`NEWS`、`RECENT OPEN`
 - 這些字串已有可重現的偏移與長度標記輸出
+- 安裝器現在會自動對 `VEHomeWC` 的兩份 keyedobjects 資源套用補丁
 
 ### 4. 繁體中文 `.strings` 詞條已達完整覆蓋
 
@@ -157,11 +159,11 @@
 
 **現在最準確的定性是：**
 
-這是一個 **字串層已做滿、安裝鏈路已驗證的 Mac 繁體中文漢化工程**，但還不是已完成全部視覺驗收的正式最終版。
+這是一個 **字串層已做滿、安裝鏈路與首頁核心靜態 UI 已驗證的 Mac 繁體中文漢化工程**，但還不是已完成全部視覺驗收的正式最終版。
 
 可以繼續開發。  
 但如果對外公開，必須誠實描述為：
 
-- 高覆蓋開發版
+- 高覆蓋準正式版
 - `.strings` 層已完整覆蓋
 - `.nib` / 視覺驗收仍待完成

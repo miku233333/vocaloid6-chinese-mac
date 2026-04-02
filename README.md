@@ -1,9 +1,9 @@
 # VOCALOID6 Mac 繁體中文漢化工程
 
-**狀態**: 高覆蓋開發版  
+**狀態**: 高覆蓋準正式版  
 **目標平台**: macOS  
 **主要語言**: 繁體中文（`zh-TW`）  
-**當前定位**: 已完成 `.strings` 真實 key 全覆蓋的 Mac 繁體中文漢化工程
+**當前定位**: 已完成 `.strings` 真實 key 全覆蓋，並補上首頁 compiled nib 靜態文案的 Mac 繁體中文漢化工程
 
 ---
 
@@ -35,13 +35,13 @@
 - 安裝器現在會對修改後的副本 app 自動做 ad-hoc 重簽名
 - 已確認安裝後的副本 app 可直接重新啟動
 - 已確認 app 使用者語言偏好可由安裝器寫入 `zh-TW`
-- 已確認主啟動畫面來自 `VEHomeWC` compiled nib，目前仍是英文
+- 已確認主啟動畫面來自 `VEHomeWC` compiled nib，且已在副本 app 實測將 `NEW PROJECT / OPEN / RECENT OPEN / NEWS` 轉為繁體中文
 
 ---
 
 ## 當前真實完成度
 
-如果只看 `.strings` 字層與安裝鏈路，現在已接近 **完成版**；如果把 `.nib` 視覺核對與逐頁 UI 驗收也算進去，整體仍然是 **高覆蓋開發版**。
+如果只看 `.strings` 字層、安裝鏈路、以及首頁核心靜態 UI，現在已接近 **完成版**；如果把所有頁面的逐頁視覺驗收與不同版本兼容性也算進去，整體仍然是 **高覆蓋準正式版**。
 
 已完成：
 
@@ -54,12 +54,13 @@
 - 真實 app 資源提取驗證
 - 多文件 `.strings` bundle 生成
 - 安全副本安裝驗證
+- `VEHomeWC` compiled nib 首頁靜態文案補丁
 
 未完成：
 
 - 逐頁 UI 視覺驗收報告
 - 不同 VOCALOID6 Mac 版本兼容性驗證
-- `.nib` 候選文本的最終落地
+- 其餘 compiled nib / 動態內容的最終落地
 
 ---
 
@@ -81,6 +82,8 @@
   清洗 `.nib` 可見文案並自動匹配繁體中文建議翻譯
 - [scripts/analyze_compiled_nib.py](./scripts/analyze_compiled_nib.py)
   分析 compiled nib 內嵌字串偏移，供未來定向 patch 參考
+- [scripts/patch_compiled_nibs.py](./scripts/patch_compiled_nibs.py)
+  對 `VEHomeWC` 這類 compiled nib 做定向字串補丁
 - [USER_GUIDE.md](./USER_GUIDE.md)
   使用說明
 - [COMPLETION_REPORT.md](./COMPLETION_REPORT.md)
@@ -154,6 +157,7 @@ python3 scripts/bootstrap_real_keys.py
 - 備份 `Contents/Resources`
 - 建立 `zh-TW.lproj`
 - 安裝由真實 key 生成的多份 `.strings` 文件
+- 對 `VEHomeWC` 首頁 compiled nib 套用靜態文案補丁
 - 如無法生成多文件，才回退為單一 `Localizable.strings`
 
 它**不代表所有 UI 都已完成漢化**，但已不再只是“空骨架安裝”。
@@ -219,7 +223,7 @@ python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Cont
 
 - 啟動畫面主窗口來自 `VEHomeWC.nib`
 - `NEW PROJECT`、`OPEN`、`NEWS`、`RECENT OPEN` 這些文字直接內嵌在 `keyedobjects-*.nib`
-- 它們目前不在現有 `28` 個 `.strings` 文件覆蓋範圍內
+- 安裝器現在會對兩份 `keyedobjects-*.nib` 自動套用首頁靜態文案補丁
 
 ---
 
@@ -257,6 +261,7 @@ python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Cont
 - 已有 `scripts/smoke_test_install.py` 可一鍵重跑整條驗證鏈
 - 已有 `scripts/bootstrap_nib_visible_texts.py` 可把 `.nib` 層收斂成可維護清單
 - 已有 `scripts/analyze_compiled_nib.py` 可定位 `VEHomeWC` 這類 compiled nib 的內嵌英文
+- 已有 `scripts/patch_compiled_nibs.py` 可自動把首頁 `新增專案 / 開啟 / 最近開啟 / 最新消息` 打進副本 app
 - 目前真正的下一道難關，已經從「能不能提取」變成「怎樣高品質補完 zh-TW」
 
 ---
@@ -264,7 +269,7 @@ python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Cont
 ## 已知限制
 
 - `zh-TW.json` 已有 `700` 條翻譯，但 `.nib` / 視覺層仍未做完
-- 啟動畫面 `VEHomeWC` 目前仍是英文，因為它走 compiled nib 而不是現有 `.strings` 管線
+- 右側新聞內容仍保留原始來源語言，這部分屬於內容層而不是 UI shell 漏翻
 - 尚未確認所有版本的 VOCALOID6 Mac 都使用相同資源結構
 - 沒有可直接分發的原版資源替換結果
 - [docs/TEST_REPORT.md](./docs/TEST_REPORT.md) 現在只代表「工具鏈驗證狀態」，不是完整產品測試結論

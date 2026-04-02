@@ -16,6 +16,7 @@ from typing import Optional
 import argparse
 from datetime import datetime
 
+from patch_compiled_nibs import CompiledNibPatcher
 from resource_replacer import ResourceReplacer
 
 
@@ -250,7 +251,14 @@ class VocaloidInstaller:
             self.generate_localizable_strings(lang_dir)
         else:
             print(f"✅ 安裝 {installed_count} 個本地化 strings 文件")
-        
+
+        compiled_nib_results = CompiledNibPatcher(self.language).apply_to_app(app_path)
+        if compiled_nib_results:
+            patch_count = sum(len(rows) for rows in compiled_nib_results.values())
+            print(f"✅ 已套用 {patch_count} 個 compiled nib 定向補丁")
+        else:
+            print("ℹ️ 本次沒有可套用的 compiled nib 補丁")
+
         # 創建 Info.plist 覆蓋（如果需要）
         self.patch_info_plist(app_path)
         self.write_language_defaults(self.get_bundle_identifier(app_path))

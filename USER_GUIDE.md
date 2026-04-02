@@ -9,7 +9,7 @@
 
 ### ⚠️ 重要提醒
 
-1. **本倉庫目前是工程骨架，不是已完成正式漢化包**
+1. **本倉庫目前是高覆蓋準正式版，不是已完成全部視覺驗收的最終成品**
 2. **僅供個人研究與學習使用**
 3. **請支持正版軟件**
 4. **安裝前務必備份原始文件**
@@ -115,6 +115,7 @@ python3 scripts/installer.py --app-path "./tmp/VOCALOID6 Editor Test.app" -y --i
 - 安裝後副本 app 是否可直接重新啟動
 
 安裝器現在會自動對被修改的 `.app` 做 ad-hoc 重簽名，降低「安裝後無法啟動」的風險。
+另外也會自動對 `VEHomeWC` 首頁的 compiled nib 套用靜態文案補丁。
 
 #### 步驟 8: 一鍵冒煙測試（推薦）
 
@@ -160,7 +161,7 @@ python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Cont
 - `NEWS`
 - `RECENT OPEN`
 
-也就是目前主啟動畫面上還沒被繁中化的那一批硬嵌英文。
+也就是用來定位 compiled nib 中還沒落地的硬嵌英文。
 
 ---
 
@@ -180,10 +181,10 @@ python3 scripts/analyze_compiled_nib.py "/Applications/VOCALOID6 Editor.app/Cont
 | 安裝器 | 🟢 高覆蓋可用 | 已會安裝多文件 `.strings` bundle，且副本安裝與重新啟動已驗證 |
 | 翻譯文件 | 🟢 高覆蓋 | `zh-TW` 目前已有 700 條實際可用翻譯 |
 | 資源提取工具 | ✅ 可用 | 已在真實 app 上驗證可提取 1078 條字符串 |
-| 實際漢化資源 | 🟡 初步可生成 | 已能生成 28 個 `.strings` 文件 |
-| 實機測試 | 🟡 部分完成 | 已完成副本 app 安裝、重簽名、重啟驗證，逐頁 UI 驗收仍未完成 |
+| 實際漢化資源 | 🟢 高覆蓋 | 已能生成 28 個 `.strings` 文件，並自動補首頁 compiled nib |
+| 實機測試 | 🟡 部分完成 | 已完成副本 app 安裝、重簽名、重啟與首頁靜態 UI 驗證，逐頁 UI 驗收仍未完成 |
 
-**整體狀態**: 工程骨架可用，正式漢化仍未完成
+**整體狀態**: 高覆蓋準正式版可用，完整逐頁視覺驗收仍未完成
 
 ---
 
